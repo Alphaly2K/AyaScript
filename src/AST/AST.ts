@@ -11,14 +11,12 @@
     | ContinueStatement
     | SendStatement
     | Block
-    | LValue
     | BinaryExpression
     | UnaryExpression
     | Variable
     | Parameter
     | Integer
     | Literal
-    | UnaryExpressionWithSideEffect
     ;
 
 export interface Program {
@@ -29,13 +27,7 @@ export interface Program {
 export interface UnaryExpression {
     type: "UnaryExpression";
     operator: string;
-    value: ASTNode;
-}
-
-export interface UnaryExpressionWithSideEffect {
-    type: "UnaryExpressionWithSideEffect";
-    operator: string;
-    value: string;
+    operand: ASTNode;
 }
 
 export interface Integer {
@@ -45,7 +37,7 @@ export interface Integer {
 
 export interface Variable {
     type: "Variable";
-    name: ASTNode;
+    name: string;
 }
 
 export interface SendStatement {
@@ -85,7 +77,7 @@ export interface Parameter {
 
 export interface Assignment {
     type: "Assignment";
-    target: LValue; // 赋值目标
+    target: Variable; // 赋值目标
     value: ASTNode; // 表达式的值
 }
 
@@ -124,12 +116,6 @@ export interface ContinueStatement {
 export interface Block {
     type: "Block";
     body: ASTNode[]; // 块内语句
-}
-
-export interface LValue {
-    type: "LValue";
-    name: string; // 变量名或结构化左值的根名称
-    path: (string | ASTNode)[]; // 路径，例如 `a.b[0]`
 }
 
 export interface Literal {

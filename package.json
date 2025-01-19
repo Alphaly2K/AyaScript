@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test" : "ts-node src/index.ts"
   },
   "dependencies": {
     "antlr4ts": "^0.5.0-alpha.4"

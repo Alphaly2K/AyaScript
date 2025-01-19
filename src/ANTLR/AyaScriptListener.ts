@@ -3,8 +3,6 @@
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
-import { IncrementContext } from "./AyaScriptParser";
-import { DecrementContext } from "./AyaScriptParser";
 import { MultiplicationContext } from "./AyaScriptParser";
 import { DivisionContext } from "./AyaScriptParser";
 import { ModulusContext } from "./AyaScriptParser";
@@ -24,6 +22,8 @@ import { VariableContext } from "./AyaScriptParser";
 import { FunctionContext } from "./AyaScriptParser";
 import { IntegerContext } from "./AyaScriptParser";
 import { StringContext } from "./AyaScriptParser";
+import { IncrementContext } from "./AyaScriptParser";
+import { DecrementContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
 import { StatementContext } from "./AyaScriptParser";
 import { VarDeclContext } from "./AyaScriptParser";
@@ -36,13 +36,10 @@ import { IfStmtContext } from "./AyaScriptParser";
 import { WhileStmtContext } from "./AyaScriptParser";
 import { BreakStmtContext } from "./AyaScriptParser";
 import { ContinueStmtContext } from "./AyaScriptParser";
-import { LvalueContext } from "./AyaScriptParser";
 import { ParamListContext } from "./AyaScriptParser";
 import { SendStmtContext } from "./AyaScriptParser";
 import { ReadStmtContext } from "./AyaScriptParser";
 import { ParamContext } from "./AyaScriptParser";
-import { IncrementExprContext } from "./AyaScriptParser";
-import { DecrementExprContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
 import { TypeContext } from "./AyaScriptParser";
@@ -53,32 +50,6 @@ import { TypeContext } from "./AyaScriptParser";
  * `AyaScriptParser`.
  */
 export interface AyaScriptListener extends ParseTreeListener {
-	/**
-	 * Enter a parse tree produced by the `Increment`
-	 * labeled alternative in `AyaScriptParser.incrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	enterIncrement?: (ctx: IncrementContext) => void;
-	/**
-	 * Exit a parse tree produced by the `Increment`
-	 * labeled alternative in `AyaScriptParser.incrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	exitIncrement?: (ctx: IncrementContext) => void;
-
-	/**
-	 * Enter a parse tree produced by the `Decrement`
-	 * labeled alternative in `AyaScriptParser.decrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	enterDecrement?: (ctx: DecrementContext) => void;
-	/**
-	 * Exit a parse tree produced by the `Decrement`
-	 * labeled alternative in `AyaScriptParser.decrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	exitDecrement?: (ctx: DecrementContext) => void;
-
 	/**
 	 * Enter a parse tree produced by the `Multiplication`
 	 * labeled alternative in `AyaScriptParser.expr`.
@@ -327,6 +298,32 @@ export interface AyaScriptListener extends ParseTreeListener {
 	exitString?: (ctx: StringContext) => void;
 
 	/**
+	 * Enter a parse tree produced by the `Increment`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	enterIncrement?: (ctx: IncrementContext) => void;
+	/**
+	 * Exit a parse tree produced by the `Increment`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	exitIncrement?: (ctx: IncrementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `Decrement`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	enterDecrement?: (ctx: DecrementContext) => void;
+	/**
+	 * Exit a parse tree produced by the `Decrement`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	exitDecrement?: (ctx: DecrementContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `AyaScriptParser.program`.
 	 * @param ctx the parse tree
 	 */
@@ -459,17 +456,6 @@ export interface AyaScriptListener extends ParseTreeListener {
 	exitContinueStmt?: (ctx: ContinueStmtContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	enterLvalue?: (ctx: LvalueContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	exitLvalue?: (ctx: LvalueContext) => void;
-
-	/**
 	 * Enter a parse tree produced by `AyaScriptParser.paramList`.
 	 * @param ctx the parse tree
 	 */
@@ -512,28 +498,6 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitParam?: (ctx: ParamContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `AyaScriptParser.incrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	enterIncrementExpr?: (ctx: IncrementExprContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.incrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	exitIncrementExpr?: (ctx: IncrementExprContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `AyaScriptParser.decrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	enterDecrementExpr?: (ctx: DecrementExprContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.decrementExpr`.
-	 * @param ctx the parse tree
-	 */
-	exitDecrementExpr?: (ctx: DecrementExprContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `AyaScriptParser.expr`.

@@ -1,4 +1,4 @@
-﻿import {ASTNode, FunctionCall, LValue, Parameter, Program, SendStatement} from "./AST/AST";
+﻿import {ASTNode, FunctionCall, Parameter, Program, SendStatement} from "./AST/AST";
 
 export class Interpreter {
     private globalSymbolTable: Record<string, any> = {};
@@ -68,8 +68,8 @@ export class Interpreter {
                 return node.value;
 
             case "Assignment":
-                const target = this.resolveLValue(node.target);
-                target.scope[target.key] = this.evaluate(node.value);
+                const target = node.target.name;
+                this.currentScope[target] = node.value;
                 break;
 
             case "Variable":
@@ -88,9 +88,6 @@ export class Interpreter {
             case "Literal":
                 return node.value;
 
-            case "LValue":
-                const resolved = this.resolveLValue(node);
-                return resolved.scope[resolved.key];
 
             case "BinaryExpression":
                 switch (node.operator) {
@@ -127,32 +124,29 @@ export class Interpreter {
             case "UnaryExpression":
                 switch (node.operator) {
                     case "!":
-                        return !this.evaluate(node.value);
-                    default:
-                        throw new Error("Unrecognized operator " + node.operator);
-                }
-            case "UnaryExpressionWithSideEffect":
-                switch (node.operator) {
+                        return !this.evaluate(node.operand);
                     case "++":
                         try {
                             // @ts-ignore
-                            this.currentScope[node.value.name]++;
+                            this.currentScope[node.operand.name]++;
+
                             // @ts-ignore
-                            return this.currentScope[node.value.name];
+                            return this.currentScope[node.operand.name];
                         } catch (e: any) {
-                            throw new Error("Unrecognized variable: " + node.value);
+                            throw new Error("Unrecognized variable: " + node.operand);
                         }
                     case "--":
                         try {
                             // @ts-ignore
-                            this.currentScope[node.value.name]--;
+                            this.currentScope[node.operand.name]--;
                             // @ts-ignore
-                            return this.currentScope[node.value.name];
+                            return this.currentScope[node.operand.name];
                         } catch (e: any) {
-                            throw new Error("Unrecognized variable: " + node.value);
+                            throw new Error("Unrecognized variable: " + node.operand);
                         }
+
                     default:
-                        throw new Error("Unrecognized variable " + node.operator);
+                        throw new Error("Unrecognized operator " + node.operator);
                 }
             default:
                 throw new Error(`Unknown AST node type: ${node.type}`);
@@ -160,34 +154,26 @@ export class Interpreter {
     }
 
     send(node: SendStatement): any {
-        const value = node.body;
-        // @ts-ignore
-        console.log(value.value);
+        console.log(this.evaluate(node.body));
     }
 
     callFunction(node: FunctionCall): any {
-        // 1. 查找函数定义
         const func = this.globalSymbolTable[node.name];
         if (!func) {
             throw new Error(`Function '${node.name}' not found.`);
         }
-        // 2. 创建局部符号表并绑定参数
         func.params.forEach((param: Parameter, index: number) => {
             const paramName = param.name;
-            const paramValue = node.arguments[index];
-            this.currentScope[paramName] = paramValue;
+            this.currentScope[paramName] = this.evaluate(node.arguments[index]);
         });
 
-        // 3. 执行函数体
-        // 设置当前局部符号表
         let result: any = undefined;
-
-        // 假设函数体是一个 AST 语句块
         try {
             for (const stmt of func.body.body) {
-                result = this.evaluate(stmt);  // 递归执行函数体中的每个语句
-                if (result !== undefined && result.type === 'return') {
-                    return result.value;  // 如果遇到 return 语句，返回值
+                result = this.evaluate(stmt);
+                console.log(result);
+                if (result !== undefined && result.type === 'ReturnStatement') {
+                    return result.value;
                 }
             }
         } catch (e: any) {
@@ -198,19 +184,6 @@ export class Interpreter {
         return result;
     }
 
-    resolveLValue(lvalue: LValue): { scope: Record<string, any>; key: string } {
-        let scope = this.currentScope;
-        let key = lvalue.name;
-
-        if (!(key in scope)) {
-            scope = this.globalSymbolTable;
-            if (!(key in scope)) {
-                throw new Error(`Variable ${key} is not defined`);
-            }
-        }
-
-        return {scope, key};
-    }
 
     evaluateBlock(block: ASTNode[]): void {
         for (const stmt of block) {

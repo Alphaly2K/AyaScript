@@ -10,10 +10,9 @@ import {
     FunctionDeclaration,
     IfStatement, Integer,
     Literal,
-    LValue,
     Parameter,
     Program,
-    ReturnStatement, SendStatement, UnaryExpression, UnaryExpressionWithSideEffect, Variable,
+    ReturnStatement, SendStatement, UnaryExpression, Variable,
     VariableDeclaration,
     WhileStatement
 } from "./AST";
@@ -33,7 +32,6 @@ import {
     LogicalAndContext,
     LogicalNotContext,
     LogicalOrContext,
-    LvalueContext,
     ModulusContext,
     MultiplicationContext,
     NotEqualContext,
@@ -277,29 +275,35 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
     }
 
     visitLogicalNot(ctx: LogicalNotContext): UnaryExpression {
-        const value = this.visit(ctx.expr());
+        const operand = this.visit(ctx.expr());
         return {
             type: "UnaryExpression",
             operator: "!",
-            value,
+            operand,
         }
     }
 
-    visitIncrement(ctx: IncrementContext): UnaryExpressionWithSideEffect {
-        const value = ctx.ID().text;
+    visitIncrement(ctx: IncrementContext): UnaryExpression {
+        const name = ctx.ID().text;
         return {
-            type: "UnaryExpressionWithSideEffect",
+            type: "UnaryExpression",
             operator: "++",
-            value,
+            operand: {
+                type:"Variable",
+                name
+            },
         }
     }
 
-    visitDecrement(ctx: DecrementContext): UnaryExpressionWithSideEffect {
-        const value = ctx.ID().text;
+    visitDecrement(ctx: DecrementContext): UnaryExpression {
+        const name = ctx.ID().text;
         return {
-            type: "UnaryExpressionWithSideEffect",
+            type: "UnaryExpression",
             operator: "--",
-            value,
+            operand: {
+                type:"Variable",
+                name
+            },
         }
     }
 
@@ -344,16 +348,6 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
     visitBlock(ctx: BlockContext): Block {
         const body = ctx.statement().map((stmt: any) => this.visit(stmt));
         return {type: "Block", body};
-    }
-
-    visitLvalue(ctx: LvalueContext): LValue {
-        const name = ctx.ID(0).text;
-        const children = ctx.children;
-        const path = children ? children.slice(1).map((child: any) => {
-            if (child.text === ".") return {type: "PropertyAccess", name: child.text};
-            if (child.text === "[") return this.visit(child);
-        }) : [];
-        return {type: "LValue", name, path};
     }
 
     visitLiteral(ctx: any): Literal {

@@ -3,8 +3,6 @@
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
-import { IncrementContext } from "./AyaScriptParser";
-import { DecrementContext } from "./AyaScriptParser";
 import { MultiplicationContext } from "./AyaScriptParser";
 import { DivisionContext } from "./AyaScriptParser";
 import { ModulusContext } from "./AyaScriptParser";
@@ -24,6 +22,8 @@ import { VariableContext } from "./AyaScriptParser";
 import { FunctionContext } from "./AyaScriptParser";
 import { IntegerContext } from "./AyaScriptParser";
 import { StringContext } from "./AyaScriptParser";
+import { IncrementContext } from "./AyaScriptParser";
+import { DecrementContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
 import { StatementContext } from "./AyaScriptParser";
 import { VarDeclContext } from "./AyaScriptParser";
@@ -36,13 +36,10 @@ import { IfStmtContext } from "./AyaScriptParser";
 import { WhileStmtContext } from "./AyaScriptParser";
 import { BreakStmtContext } from "./AyaScriptParser";
 import { ContinueStmtContext } from "./AyaScriptParser";
-import { LvalueContext } from "./AyaScriptParser";
 import { ParamListContext } from "./AyaScriptParser";
 import { SendStmtContext } from "./AyaScriptParser";
 import { ReadStmtContext } from "./AyaScriptParser";
 import { ParamContext } from "./AyaScriptParser";
-import { IncrementExprContext } from "./AyaScriptParser";
-import { DecrementExprContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
 import { TypeContext } from "./AyaScriptParser";
@@ -56,22 +53,6 @@ import { TypeContext } from "./AyaScriptParser";
  * operations with no return type.
  */
 export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
-	/**
-	 * Visit a parse tree produced by the `Increment`
-	 * labeled alternative in `AyaScriptParser.incrementExpr`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitIncrement?: (ctx: IncrementContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by the `Decrement`
-	 * labeled alternative in `AyaScriptParser.decrementExpr`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitDecrement?: (ctx: DecrementContext) => Result;
-
 	/**
 	 * Visit a parse tree produced by the `Multiplication`
 	 * labeled alternative in `AyaScriptParser.expr`.
@@ -225,6 +206,22 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitString?: (ctx: StringContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by the `Increment`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitIncrement?: (ctx: IncrementContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `Decrement`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitDecrement?: (ctx: DecrementContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `AyaScriptParser.program`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -309,13 +306,6 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitContinueStmt?: (ctx: ContinueStmtContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitLvalue?: (ctx: LvalueContext) => Result;
-
-	/**
 	 * Visit a parse tree produced by `AyaScriptParser.paramList`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -342,20 +332,6 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitParam?: (ctx: ParamContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `AyaScriptParser.incrementExpr`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitIncrementExpr?: (ctx: IncrementExprContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `AyaScriptParser.decrementExpr`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitDecrementExpr?: (ctx: DecrementExprContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `AyaScriptParser.expr`.
