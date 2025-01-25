@@ -1,8 +1,18 @@
 ﻿import {ASTNode, FunctionCall, Parameter, Program, SendStatement} from "./AST/AST";
 
+
+let globalFunction: Record<string, any> = {};
+let globalVariable: Record<string, any> = {};
+let globalSymbolTable: Record<string, Record<string, any>> = {"FUNCTION": globalFunction, "VAR": globalVariable};
+
 export class Interpreter {
-    private globalSymbolTable: Record<string, any> = {};
-    private currentScope: Record<string, any> = {};
+    private functionScope: Record<string, any> = {};
+    private variableScope: Record<string, any> = {};
+    private currentScope: Record<string, Record<string, any>> =
+        {
+            "FUNCTION": this.functionScope,
+            "VAR": this.variableScope,
+        };
     private loopStack: Array<"LOOP" | "BREAK" | "CONTINUE"> = [];
     private returnValue: any = null;
     private output: string[] = [];
@@ -25,6 +35,15 @@ export class Interpreter {
                 }
                 break;
 
+            case "ExportStatement":
+                const value = this.evaluate(node.body);
+                if (node.body.type === "FunctionDeclaration") {
+                    globalSymbolTable["FUNCTION"][value] = this.currentScope["FUNCTION"][value];
+                }
+                if (node.body.type === "Variable") {
+                    globalSymbolTable["VAR"][value] = this.currentScope["VAR"][value];
+                }
+                break
             case "SendStatement":
                 this.send(node);
                 break;
@@ -50,8 +69,8 @@ export class Interpreter {
                 throw "CONTINUE";
 
             case "FunctionDeclaration":
-                this.globalSymbolTable[node.name] = node;
-                break;
+                this.currentScope["FUNCTION"][node.name] = node;
+                return node.name;
 
             case "ReturnStatement":
                 this.returnValue = this.evaluate(node.value);
@@ -61,7 +80,7 @@ export class Interpreter {
                 return this.callFunction(node);
 
             case "VariableDeclaration":
-                this.currentScope[node.name] = node.value ? this.evaluate(node.value) : undefined;
+                this.currentScope["VAR"][node.name] = node.value ? this.evaluate(node.value) : undefined;
                 break;
 
             case "Integer":
@@ -74,14 +93,14 @@ export class Interpreter {
 
             case "Variable":
                 // @ts-ignore
-                if (this.currentScope[node.name]) {
+                if (this.currentScope["VAR"][node.name]) {
                     // @ts-ignore
-                    return this.currentScope[node.name];
+                    return this.currentScope["VAR"][node.name];
                 }
                 // @ts-ignore
-                if (this.globalSymbolTable[node.name]) {
+                if (this.globalSymbolTable["VAR"][node.name]) {
                     // @ts-ignore
-                    return this.globalSymbolTable[node.name];
+                    return this.globalSymbolTable["VAR"][node.name];
                 }
                 throw new Error("Unrecognized variable " + node.name);
 
@@ -128,19 +147,19 @@ export class Interpreter {
                     case "++":
                         try {
                             // @ts-ignore
-                            this.currentScope[node.operand.name]++;
+                            this.currentScope["VAR"][node.operand.name]++;
 
                             // @ts-ignore
-                            return this.currentScope[node.operand.name];
+                            return this.currentScope["VAR"][node.operand.name];
                         } catch (e: any) {
                             throw new Error("Unrecognized variable: " + node.operand);
                         }
                     case "--":
                         try {
                             // @ts-ignore
-                            this.currentScope[node.operand.name]--;
+                            this.currentScope["VAR"][node.operand.name]--;
                             // @ts-ignore
-                            return this.currentScope[node.operand.name];
+                            return this.currentScope["VAR"][node.operand.name];
                         } catch (e: any) {
                             throw new Error("Unrecognized variable: " + node.operand);
                         }
@@ -158,30 +177,32 @@ export class Interpreter {
     }
 
     callFunction(node: FunctionCall): any {
-        const func = this.globalSymbolTable[node.name];
+        const func = this.currentScope["FUNCTION"][node.name] ? this.currentScope["FUNCTION"][node.name] : globalSymbolTable["FUNCTION"][node.name];
         if (!func) {
             throw new Error(`Function '${node.name}' not found.`);
         }
+        const preScope = this.currentScope;
         func.params.forEach((param: Parameter, index: number) => {
             const paramName = param.name;
-            this.currentScope[paramName] = this.evaluate(node.arguments[index]);
+            this.currentScope["VAR"][paramName] = this.evaluate(node.arguments[index]);
         });
 
-        let result: any = undefined;
         try {
             for (const stmt of func.body.body) {
-                result = this.evaluate(stmt);
-                console.log(result);
-                if (result !== undefined && result.type === 'ReturnStatement') {
-                    return result.value;
-                }
+                this.evaluate(stmt);
             }
         } catch (e: any) {
-            throw new Error(`Error while executing function '${node.name}': ${e.message}`);
+            if (e != "RETURN") {
+                throw new Error(`Error while executing function '${node.name}': ${e.message}`);
+            }
         }
-
-        // 如果没有返回值，默认返回 undefined
-        return result;
+        if (this.returnValue === null && func.returnType != "void") {
+            throw new Error("Function '" + func.returnType + "' not found.");
+        }
+        const returnValue = this.returnValue;
+        this.returnValue = null;
+        this.currentScope = preScope;
+        return returnValue;
     }
 
 

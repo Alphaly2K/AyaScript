@@ -5,7 +5,7 @@ import {
     ASTNode, BinaryExpression,
     Block,
     BreakStatement,
-    ContinueStatement,
+    ContinueStatement, ExportStatement,
     FunctionCall,
     FunctionDeclaration,
     IfStatement, Integer,
@@ -20,7 +20,7 @@ import {
     AdditionContext,
     BlockContext, DecrementContext,
     DivisionContext,
-    EqualContext,
+    EqualContext, ExportStmtContext,
     FuncCallContext,
     FuncDeclContext,
     GreaterThanContext,
@@ -37,7 +37,7 @@ import {
     NotEqualContext,
     ParamContext,
     ParamListContext,
-    SendStmtContext,
+    SendStmtContext, StatementContext,
     StringContext,
     SubtractionContext,
     VarDeclContext,
@@ -292,6 +292,22 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
                 type:"Variable",
                 name
             },
+        }
+    }
+
+    visitStatement(ctx: StatementContext): any {
+        if(ctx.expr()!=undefined){
+            // @ts-ignore
+            return this.visit(ctx.expr());
+        }
+        return this.visitChildren(ctx)
+    }
+
+    visitExportStmt(ctx: ExportStmtContext): ExportStatement {
+        const body = this.visitChildren(ctx);
+        return {
+            type:"ExportStatement",
+            body:body,
         }
     }
 
