@@ -3,6 +3,9 @@
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
+import { SimpleLValueContext } from "./AyaScriptParser";
+import { FieldAccessLValueContext } from "./AyaScriptParser";
+import { ArrayAccessLValueContext } from "./AyaScriptParser";
 import { MultiplicationContext } from "./AyaScriptParser";
 import { DivisionContext } from "./AyaScriptParser";
 import { ModulusContext } from "./AyaScriptParser";
@@ -42,6 +45,11 @@ import { ReadStmtContext } from "./AyaScriptParser";
 import { ParamContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
+import { StructOrUnionSpecifierContext } from "./AyaScriptParser";
+import { StructOrUnionContext } from "./AyaScriptParser";
+import { StructDeclarationListContext } from "./AyaScriptParser";
+import { StructItemContext } from "./AyaScriptParser";
+import { LvalueContext } from "./AyaScriptParser";
 import { TypeContext } from "./AyaScriptParser";
 
 
@@ -50,6 +58,45 @@ import { TypeContext } from "./AyaScriptParser";
  * `AyaScriptParser`.
  */
 export interface AyaScriptListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by the `SimpleLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterSimpleLValue?: (ctx: SimpleLValueContext) => void;
+	/**
+	 * Exit a parse tree produced by the `SimpleLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitSimpleLValue?: (ctx: SimpleLValueContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `FieldAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterFieldAccessLValue?: (ctx: FieldAccessLValueContext) => void;
+	/**
+	 * Exit a parse tree produced by the `FieldAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitFieldAccessLValue?: (ctx: FieldAccessLValueContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `ArrayAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => void;
+	/**
+	 * Exit a parse tree produced by the `ArrayAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => void;
+
 	/**
 	 * Enter a parse tree produced by the `Multiplication`
 	 * labeled alternative in `AyaScriptParser.expr`.
@@ -520,6 +567,61 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitBlock?: (ctx: BlockContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.structOrUnionSpecifier`.
+	 * @param ctx the parse tree
+	 */
+	enterStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.structOrUnionSpecifier`.
+	 * @param ctx the parse tree
+	 */
+	exitStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.structOrUnion`.
+	 * @param ctx the parse tree
+	 */
+	enterStructOrUnion?: (ctx: StructOrUnionContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.structOrUnion`.
+	 * @param ctx the parse tree
+	 */
+	exitStructOrUnion?: (ctx: StructOrUnionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.structDeclarationList`.
+	 * @param ctx the parse tree
+	 */
+	enterStructDeclarationList?: (ctx: StructDeclarationListContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.structDeclarationList`.
+	 * @param ctx the parse tree
+	 */
+	exitStructDeclarationList?: (ctx: StructDeclarationListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.structItem`.
+	 * @param ctx the parse tree
+	 */
+	enterStructItem?: (ctx: StructItemContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.structItem`.
+	 * @param ctx the parse tree
+	 */
+	exitStructItem?: (ctx: StructItemContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterLvalue?: (ctx: LvalueContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitLvalue?: (ctx: LvalueContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `AyaScriptParser.type`.

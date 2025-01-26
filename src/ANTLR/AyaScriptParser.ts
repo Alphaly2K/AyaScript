@@ -4,12 +4,17 @@
 import { ATN } from "antlr4ts/atn/ATN";
 import { ATNDeserializer } from "antlr4ts/atn/ATNDeserializer";
 import { FailedPredicateException } from "antlr4ts/FailedPredicateException";
+import { NotNull } from "antlr4ts/Decorators";
 import { NoViableAltException } from "antlr4ts/NoViableAltException";
+import { Override } from "antlr4ts/Decorators";
 import { Parser } from "antlr4ts/Parser";
 import { ParserRuleContext } from "antlr4ts/ParserRuleContext";
 import { ParserATNSimulator } from "antlr4ts/atn/ParserATNSimulator";
+import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
+import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 import { RecognitionException } from "antlr4ts/RecognitionException";
 import { RuleContext } from "antlr4ts/RuleContext";
+//import { RuleVersion } from "antlr4ts/RuleVersion";
 import { TerminalNode } from "antlr4ts/tree/TerminalNode";
 import { Token } from "antlr4ts/Token";
 import { TokenStream } from "antlr4ts/TokenStream";
@@ -25,48 +30,49 @@ import { AyaScriptVisitor } from "./AyaScriptVisitor";
 export class AyaScriptParser extends Parser {
 	public static readonly T__0 = 1;
 	public static readonly T__1 = 2;
-	public static readonly WS = 3;
-	public static readonly INT = 4;
-	public static readonly ASSIGN = 5;
-	public static readonly SEMI = 6;
-	public static readonly DOT = 7;
-	public static readonly LBRACK = 8;
-	public static readonly RBRACK = 9;
-	public static readonly LPAREN = 10;
-	public static readonly RPAREN = 11;
-	public static readonly COMMA = 12;
-	public static readonly EXPORT = 13;
-	public static readonly VAR = 14;
-	public static readonly FUNC = 15;
-	public static readonly RETURN = 16;
-	public static readonly IF = 17;
-	public static readonly ELSE = 18;
-	public static readonly WHILE = 19;
-	public static readonly BREAK = 20;
-	public static readonly CONTINUE = 21;
-	public static readonly COLON = 22;
-	public static readonly VOID = 23;
-	public static readonly SEND = 24;
-	public static readonly READ = 25;
-	public static readonly ID = 26;
-	public static readonly PLUS = 27;
-	public static readonly MINUS = 28;
-	public static readonly MULT = 29;
-	public static readonly DIV = 30;
-	public static readonly MOD = 31;
-	public static readonly EQ = 32;
-	public static readonly NEQ = 33;
-	public static readonly GT = 34;
-	public static readonly LT = 35;
-	public static readonly GTE = 36;
-	public static readonly LTE = 37;
-	public static readonly AND = 38;
-	public static readonly OR = 39;
-	public static readonly NOT = 40;
-	public static readonly INCREAMENT = 41;
-	public static readonly DECREAMENT = 42;
-	public static readonly STRING = 43;
-	public static readonly COMMENT = 44;
+	public static readonly T__2 = 3;
+	public static readonly WS = 4;
+	public static readonly INT = 5;
+	public static readonly ASSIGN = 6;
+	public static readonly SEMI = 7;
+	public static readonly DOT = 8;
+	public static readonly LBRACK = 9;
+	public static readonly RBRACK = 10;
+	public static readonly LPAREN = 11;
+	public static readonly RPAREN = 12;
+	public static readonly COMMA = 13;
+	public static readonly EXPORT = 14;
+	public static readonly VAR = 15;
+	public static readonly FUNC = 16;
+	public static readonly RETURN = 17;
+	public static readonly IF = 18;
+	public static readonly ELSE = 19;
+	public static readonly WHILE = 20;
+	public static readonly BREAK = 21;
+	public static readonly CONTINUE = 22;
+	public static readonly COLON = 23;
+	public static readonly VOID = 24;
+	public static readonly SEND = 25;
+	public static readonly READ = 26;
+	public static readonly ID = 27;
+	public static readonly PLUS = 28;
+	public static readonly MINUS = 29;
+	public static readonly MULT = 30;
+	public static readonly DIV = 31;
+	public static readonly MOD = 32;
+	public static readonly EQ = 33;
+	public static readonly NEQ = 34;
+	public static readonly GT = 35;
+	public static readonly LT = 36;
+	public static readonly GTE = 37;
+	public static readonly LTE = 38;
+	public static readonly AND = 39;
+	public static readonly OR = 40;
+	public static readonly NOT = 41;
+	public static readonly INCREAMENT = 42;
+	public static readonly DECREAMENT = 43;
+	public static readonly STRING = 44;
+	public static readonly COMMENT = 45;
 	public static readonly RULE_program = 0;
 	public static readonly RULE_statement = 1;
 	public static readonly RULE_varDecl = 2;
@@ -85,27 +91,34 @@ export class AyaScriptParser extends Parser {
 	public static readonly RULE_param = 15;
 	public static readonly RULE_expr = 16;
 	public static readonly RULE_block = 17;
-	public static readonly RULE_type = 18;
+	public static readonly RULE_structOrUnionSpecifier = 18;
+	public static readonly RULE_structOrUnion = 19;
+	public static readonly RULE_structDeclarationList = 20;
+	public static readonly RULE_structItem = 21;
+	public static readonly RULE_lvalue = 22;
+	public static readonly RULE_type = 23;
 	// tslint:disable:no-trailing-whitespace
 	public static readonly ruleNames: string[] = [
 		"program", "statement", "varDecl", "funcDecl", "assignStmt", "funcCall", 
 		"exportStmt", "returnStmt", "ifStmt", "whileStmt", "breakStmt", "continueStmt", 
-		"paramList", "sendStmt", "readStmt", "param", "expr", "block", "type",
+		"paramList", "sendStmt", "readStmt", "param", "expr", "block", "structOrUnionSpecifier", 
+		"structOrUnion", "structDeclarationList", "structItem", "lvalue", "type",
 	];
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
-		undefined, "'{'", "'}'", undefined, undefined, "'='", "';'", "'.'", "'['", 
-		"']'", "'('", "')'", "','", "'export'", "'var'", "'func'", "'return'", 
-		"'if'", "'else'", "'while'", "'break'", "'continue'", "':'", "'void'", 
-		"'send'", "'read'", undefined, "'+'", "'-'", "'*'", "'/'", "'%'", "'=='", 
-		"'!='", "'>'", "'<'", "'>='", "'<='", "'&&'", "'||'", "'!'", "'++'", "'--'",
+		undefined, "'{'", "'}'", "'struct'", undefined, undefined, "'='", "';'", 
+		"'.'", "'['", "']'", "'('", "')'", "','", "'export'", "'var'", "'func'", 
+		"'return'", "'if'", "'else'", "'while'", "'break'", "'continue'", "':'", 
+		"'void'", "'send'", "'read'", undefined, "'+'", "'-'", "'*'", "'/'", "'%'", 
+		"'=='", "'!='", "'>'", "'<'", "'>='", "'<='", "'&&'", "'||'", "'!'", "'++'", 
+		"'--'",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
-		undefined, undefined, undefined, "WS", "INT", "ASSIGN", "SEMI", "DOT", 
-		"LBRACK", "RBRACK", "LPAREN", "RPAREN", "COMMA", "EXPORT", "VAR", "FUNC", 
-		"RETURN", "IF", "ELSE", "WHILE", "BREAK", "CONTINUE", "COLON", "VOID", 
-		"SEND", "READ", "ID", "PLUS", "MINUS", "MULT", "DIV", "MOD", "EQ", "NEQ", 
-		"GT", "LT", "GTE", "LTE", "AND", "OR", "NOT", "INCREAMENT", "DECREAMENT", 
+		undefined, undefined, undefined, undefined, "WS", "INT", "ASSIGN", "SEMI", 
+		"DOT", "LBRACK", "RBRACK", "LPAREN", "RPAREN", "COMMA", "EXPORT", "VAR", 
+		"FUNC", "RETURN", "IF", "ELSE", "WHILE", "BREAK", "CONTINUE", "COLON", 
+		"VOID", "SEND", "READ", "ID", "PLUS", "MINUS", "MULT", "DIV", "MOD", "EQ", 
+		"NEQ", "GT", "LT", "GTE", "LTE", "AND", "OR", "NOT", "INCREAMENT", "DECREAMENT", 
 		"STRING", "COMMENT",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(AyaScriptParser._LITERAL_NAMES, AyaScriptParser._SYMBOLIC_NAMES, []);
@@ -142,17 +155,17 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 39;
+			this.state = 49;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			do {
 				{
 				{
-				this.state = 38;
+				this.state = 48;
 				this.statement();
 				}
 				}
-				this.state = 41;
+				this.state = 51;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			} while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << AyaScriptParser.INT) | (1 << AyaScriptParser.LPAREN) | (1 << AyaScriptParser.EXPORT) | (1 << AyaScriptParser.VAR) | (1 << AyaScriptParser.FUNC) | (1 << AyaScriptParser.RETURN) | (1 << AyaScriptParser.IF) | (1 << AyaScriptParser.WHILE) | (1 << AyaScriptParser.BREAK) | (1 << AyaScriptParser.CONTINUE) | (1 << AyaScriptParser.SEND) | (1 << AyaScriptParser.READ) | (1 << AyaScriptParser.ID))) !== 0) || _la === AyaScriptParser.NOT || _la === AyaScriptParser.STRING);
@@ -177,13 +190,13 @@ export class AyaScriptParser extends Parser {
 		let _localctx: StatementContext = new StatementContext(this._ctx, this.state);
 		this.enterRule(_localctx, 2, AyaScriptParser.RULE_statement);
 		try {
-			this.state = 60;
+			this.state = 70;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 1, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 43;
+				this.state = 53;
 				this.varDecl();
 				}
 				break;
@@ -191,7 +204,7 @@ export class AyaScriptParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 44;
+				this.state = 54;
 				this.funcDecl();
 				}
 				break;
@@ -199,7 +212,7 @@ export class AyaScriptParser extends Parser {
 			case 3:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 45;
+				this.state = 55;
 				this.assignStmt();
 				}
 				break;
@@ -207,9 +220,9 @@ export class AyaScriptParser extends Parser {
 			case 4:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 46;
+				this.state = 56;
 				this.funcCall();
-				this.state = 47;
+				this.state = 57;
 				this.match(AyaScriptParser.SEMI);
 				}
 				break;
@@ -217,7 +230,7 @@ export class AyaScriptParser extends Parser {
 			case 5:
 				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 49;
+				this.state = 59;
 				this.exportStmt();
 				}
 				break;
@@ -225,7 +238,7 @@ export class AyaScriptParser extends Parser {
 			case 6:
 				this.enterOuterAlt(_localctx, 6);
 				{
-				this.state = 50;
+				this.state = 60;
 				this.returnStmt();
 				}
 				break;
@@ -233,7 +246,7 @@ export class AyaScriptParser extends Parser {
 			case 7:
 				this.enterOuterAlt(_localctx, 7);
 				{
-				this.state = 51;
+				this.state = 61;
 				this.ifStmt();
 				}
 				break;
@@ -241,7 +254,7 @@ export class AyaScriptParser extends Parser {
 			case 8:
 				this.enterOuterAlt(_localctx, 8);
 				{
-				this.state = 52;
+				this.state = 62;
 				this.whileStmt();
 				}
 				break;
@@ -249,7 +262,7 @@ export class AyaScriptParser extends Parser {
 			case 9:
 				this.enterOuterAlt(_localctx, 9);
 				{
-				this.state = 53;
+				this.state = 63;
 				this.breakStmt();
 				}
 				break;
@@ -257,7 +270,7 @@ export class AyaScriptParser extends Parser {
 			case 10:
 				this.enterOuterAlt(_localctx, 10);
 				{
-				this.state = 54;
+				this.state = 64;
 				this.continueStmt();
 				}
 				break;
@@ -265,7 +278,7 @@ export class AyaScriptParser extends Parser {
 			case 11:
 				this.enterOuterAlt(_localctx, 11);
 				{
-				this.state = 55;
+				this.state = 65;
 				this.sendStmt();
 				}
 				break;
@@ -273,7 +286,7 @@ export class AyaScriptParser extends Parser {
 			case 12:
 				this.enterOuterAlt(_localctx, 12);
 				{
-				this.state = 56;
+				this.state = 66;
 				this.readStmt();
 				}
 				break;
@@ -281,9 +294,9 @@ export class AyaScriptParser extends Parser {
 			case 13:
 				this.enterOuterAlt(_localctx, 13);
 				{
-				this.state = 57;
+				this.state = 67;
 				this.expr(0);
-				this.state = 58;
+				this.state = 68;
 				this.match(AyaScriptParser.SEMI);
 				}
 				break;
@@ -309,26 +322,60 @@ export class AyaScriptParser extends Parser {
 		this.enterRule(_localctx, 4, AyaScriptParser.RULE_varDecl);
 		let _la: number;
 		try {
-			this.enterOuterAlt(_localctx, 1);
-			{
-			this.state = 62;
-			this.match(AyaScriptParser.VAR);
-			this.state = 63;
-			this.match(AyaScriptParser.ID);
-			this.state = 66;
+			this.state = 89;
 			this._errHandler.sync(this);
-			_la = this._input.LA(1);
-			if (_la === AyaScriptParser.ASSIGN) {
+			switch ( this.interpreter.adaptivePredict(this._input, 4, this._ctx) ) {
+			case 1:
+				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 64;
-				this.match(AyaScriptParser.ASSIGN);
-				this.state = 65;
-				this.expr(0);
+				this.state = 72;
+				this.match(AyaScriptParser.VAR);
+				this.state = 73;
+				this.match(AyaScriptParser.ID);
+				this.state = 76;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
+				if (_la === AyaScriptParser.ASSIGN) {
+					{
+					this.state = 74;
+					this.match(AyaScriptParser.ASSIGN);
+					this.state = 75;
+					this.expr(0);
+					}
 				}
-			}
 
-			this.state = 68;
-			this.match(AyaScriptParser.SEMI);
+				this.state = 78;
+				this.match(AyaScriptParser.SEMI);
+				}
+				break;
+
+			case 2:
+				this.enterOuterAlt(_localctx, 2);
+				{
+				this.state = 79;
+				this.match(AyaScriptParser.VAR);
+				this.state = 80;
+				this.match(AyaScriptParser.ID);
+				this.state = 81;
+				this.match(AyaScriptParser.COLON);
+				this.state = 82;
+				this.type();
+				this.state = 85;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
+				if (_la === AyaScriptParser.ASSIGN) {
+					{
+					this.state = 83;
+					this.match(AyaScriptParser.ASSIGN);
+					this.state = 84;
+					this.expr(0);
+					}
+				}
+
+				this.state = 87;
+				this.match(AyaScriptParser.SEMI);
+				}
+				break;
 			}
 		}
 		catch (re) {
@@ -353,37 +400,37 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 70;
+			this.state = 91;
 			this.match(AyaScriptParser.FUNC);
-			this.state = 71;
+			this.state = 92;
 			this.match(AyaScriptParser.ID);
-			this.state = 72;
+			this.state = 93;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 74;
+			this.state = 95;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === AyaScriptParser.ID) {
 				{
-				this.state = 73;
+				this.state = 94;
 				this.paramList();
 				}
 			}
 
-			this.state = 76;
+			this.state = 97;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 79;
+			this.state = 100;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === AyaScriptParser.COLON) {
 				{
-				this.state = 77;
+				this.state = 98;
 				this.match(AyaScriptParser.COLON);
-				this.state = 78;
+				this.state = 99;
 				this.type();
 				}
 			}
 
-			this.state = 81;
+			this.state = 102;
 			this.block();
 			}
 		}
@@ -408,13 +455,13 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 83;
-			this.match(AyaScriptParser.ID);
-			this.state = 84;
+			this.state = 104;
+			this.lvalue(0);
+			this.state = 105;
 			this.match(AyaScriptParser.ASSIGN);
-			this.state = 85;
+			this.state = 106;
 			this.expr(0);
-			this.state = 86;
+			this.state = 107;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -440,37 +487,37 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 88;
+			this.state = 109;
 			this.match(AyaScriptParser.ID);
-			this.state = 89;
+			this.state = 110;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 98;
+			this.state = 119;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << AyaScriptParser.INT) | (1 << AyaScriptParser.LPAREN) | (1 << AyaScriptParser.ID))) !== 0) || _la === AyaScriptParser.NOT || _la === AyaScriptParser.STRING) {
 				{
-				this.state = 90;
+				this.state = 111;
 				this.expr(0);
-				this.state = 95;
+				this.state = 116;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				while (_la === AyaScriptParser.COMMA) {
 					{
 					{
-					this.state = 91;
+					this.state = 112;
 					this.match(AyaScriptParser.COMMA);
-					this.state = 92;
+					this.state = 113;
 					this.expr(0);
 					}
 					}
-					this.state = 97;
+					this.state = 118;
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 				}
 				}
 			}
 
-			this.state = 100;
+			this.state = 121;
 			this.match(AyaScriptParser.RPAREN);
 			}
 		}
@@ -495,20 +542,20 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 102;
+			this.state = 123;
 			this.match(AyaScriptParser.EXPORT);
-			this.state = 105;
+			this.state = 126;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case AyaScriptParser.ID:
 				{
-				this.state = 103;
+				this.state = 124;
 				this.match(AyaScriptParser.ID);
 				}
 				break;
 			case AyaScriptParser.FUNC:
 				{
-				this.state = 104;
+				this.state = 125;
 				this.funcDecl();
 				}
 				break;
@@ -538,11 +585,11 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 107;
+			this.state = 128;
 			this.match(AyaScriptParser.RETURN);
-			this.state = 108;
+			this.state = 129;
 			this.expr(0);
-			this.state = 109;
+			this.state = 130;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -568,24 +615,24 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 111;
+			this.state = 132;
 			this.match(AyaScriptParser.IF);
-			this.state = 112;
+			this.state = 133;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 113;
+			this.state = 134;
 			this.expr(0);
-			this.state = 114;
+			this.state = 135;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 115;
+			this.state = 136;
 			this.block();
-			this.state = 118;
+			this.state = 139;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === AyaScriptParser.ELSE) {
 				{
-				this.state = 116;
+				this.state = 137;
 				this.match(AyaScriptParser.ELSE);
-				this.state = 117;
+				this.state = 138;
 				this.block();
 				}
 			}
@@ -613,15 +660,15 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 120;
+			this.state = 141;
 			this.match(AyaScriptParser.WHILE);
-			this.state = 121;
+			this.state = 142;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 122;
+			this.state = 143;
 			this.expr(0);
-			this.state = 123;
+			this.state = 144;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 124;
+			this.state = 145;
 			this.block();
 			}
 		}
@@ -646,9 +693,9 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 126;
+			this.state = 147;
 			this.match(AyaScriptParser.BREAK);
-			this.state = 127;
+			this.state = 148;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -673,9 +720,9 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 129;
+			this.state = 150;
 			this.match(AyaScriptParser.CONTINUE);
-			this.state = 130;
+			this.state = 151;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -701,21 +748,21 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 132;
+			this.state = 153;
 			this.param();
-			this.state = 137;
+			this.state = 158;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === AyaScriptParser.COMMA) {
 				{
 				{
-				this.state = 133;
+				this.state = 154;
 				this.match(AyaScriptParser.COMMA);
-				this.state = 134;
+				this.state = 155;
 				this.param();
 				}
 				}
-				this.state = 139;
+				this.state = 160;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -742,15 +789,15 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 140;
+			this.state = 161;
 			this.match(AyaScriptParser.SEND);
-			this.state = 141;
+			this.state = 162;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 142;
+			this.state = 163;
 			this.expr(0);
-			this.state = 143;
+			this.state = 164;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 144;
+			this.state = 165;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -775,15 +822,15 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 146;
+			this.state = 167;
 			this.match(AyaScriptParser.READ);
-			this.state = 147;
+			this.state = 168;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 148;
+			this.state = 169;
 			this.expr(0);
-			this.state = 149;
+			this.state = 170;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 150;
+			this.state = 171;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -808,11 +855,11 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 152;
+			this.state = 173;
 			this.match(AyaScriptParser.ID);
-			this.state = 153;
+			this.state = 174;
 			this.match(AyaScriptParser.COLON);
-			this.state = 154;
+			this.state = 175;
 			this.type();
 			}
 		}
@@ -849,18 +896,18 @@ export class AyaScriptParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 171;
+			this.state = 194;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 10, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 12, this._ctx) ) {
 			case 1:
 				{
 				_localctx = new LogicalNotContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
 
-				this.state = 157;
+				this.state = 178;
 				this.match(AyaScriptParser.NOT);
-				this.state = 158;
+				this.state = 179;
 				this.expr(8);
 				}
 				break;
@@ -870,11 +917,11 @@ export class AyaScriptParser extends Parser {
 				_localctx = new ParenthesesContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 159;
+				this.state = 180;
 				this.match(AyaScriptParser.LPAREN);
-				this.state = 160;
+				this.state = 181;
 				this.expr(0);
-				this.state = 161;
+				this.state = 182;
 				this.match(AyaScriptParser.RPAREN);
 				}
 				break;
@@ -884,8 +931,8 @@ export class AyaScriptParser extends Parser {
 				_localctx = new VariableContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 163;
-				this.match(AyaScriptParser.ID);
+				this.state = 184;
+				this.lvalue(0);
 				}
 				break;
 
@@ -894,7 +941,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new FunctionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 164;
+				this.state = 185;
 				this.funcCall();
 				}
 				break;
@@ -904,7 +951,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new IntegerContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 165;
+				this.state = 186;
 				this.match(AyaScriptParser.INT);
 				}
 				break;
@@ -914,7 +961,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new StringContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 166;
+				this.state = 187;
 				this.match(AyaScriptParser.STRING);
 				}
 				break;
@@ -924,9 +971,9 @@ export class AyaScriptParser extends Parser {
 				_localctx = new IncrementContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 167;
-				this.match(AyaScriptParser.ID);
-				this.state = 168;
+				this.state = 188;
+				this.lvalue(0);
+				this.state = 189;
 				this.match(AyaScriptParser.INCREAMENT);
 				}
 				break;
@@ -936,17 +983,17 @@ export class AyaScriptParser extends Parser {
 				_localctx = new DecrementContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 169;
-				this.match(AyaScriptParser.ID);
-				this.state = 170;
+				this.state = 191;
+				this.lvalue(0);
+				this.state = 192;
 				this.match(AyaScriptParser.DECREAMENT);
 				}
 				break;
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 214;
+			this.state = 237;
 			this._errHandler.sync(this);
-			_alt = this.interpreter.adaptivePredict(this._input, 12, this._ctx);
+			_alt = this.interpreter.adaptivePredict(this._input, 14, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -954,20 +1001,20 @@ export class AyaScriptParser extends Parser {
 					}
 					_prevctx = _localctx;
 					{
-					this.state = 212;
+					this.state = 235;
 					this._errHandler.sync(this);
-					switch ( this.interpreter.adaptivePredict(this._input, 11, this._ctx) ) {
+					switch ( this.interpreter.adaptivePredict(this._input, 13, this._ctx) ) {
 					case 1:
 						{
 						_localctx = new MultiplicationContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 173;
+						this.state = 196;
 						if (!(this.precpred(this._ctx, 21))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 21)");
 						}
-						this.state = 174;
+						this.state = 197;
 						this.match(AyaScriptParser.MULT);
-						this.state = 175;
+						this.state = 198;
 						this.expr(22);
 						}
 						break;
@@ -976,13 +1023,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new DivisionContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 176;
+						this.state = 199;
 						if (!(this.precpred(this._ctx, 20))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 20)");
 						}
-						this.state = 177;
+						this.state = 200;
 						this.match(AyaScriptParser.DIV);
-						this.state = 178;
+						this.state = 201;
 						this.expr(21);
 						}
 						break;
@@ -991,13 +1038,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new ModulusContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 179;
+						this.state = 202;
 						if (!(this.precpred(this._ctx, 19))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 19)");
 						}
-						this.state = 180;
+						this.state = 203;
 						this.match(AyaScriptParser.MOD);
-						this.state = 181;
+						this.state = 204;
 						this.expr(20);
 						}
 						break;
@@ -1006,13 +1053,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new AdditionContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 182;
+						this.state = 205;
 						if (!(this.precpred(this._ctx, 18))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 18)");
 						}
-						this.state = 183;
+						this.state = 206;
 						this.match(AyaScriptParser.PLUS);
-						this.state = 184;
+						this.state = 207;
 						this.expr(19);
 						}
 						break;
@@ -1021,13 +1068,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new SubtractionContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 185;
+						this.state = 208;
 						if (!(this.precpred(this._ctx, 17))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 17)");
 						}
-						this.state = 186;
+						this.state = 209;
 						this.match(AyaScriptParser.MINUS);
-						this.state = 187;
+						this.state = 210;
 						this.expr(18);
 						}
 						break;
@@ -1036,13 +1083,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new GreaterThanContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 188;
+						this.state = 211;
 						if (!(this.precpred(this._ctx, 16))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 16)");
 						}
-						this.state = 189;
+						this.state = 212;
 						this.match(AyaScriptParser.GT);
-						this.state = 190;
+						this.state = 213;
 						this.expr(17);
 						}
 						break;
@@ -1051,13 +1098,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LessThanContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 191;
+						this.state = 214;
 						if (!(this.precpred(this._ctx, 15))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 15)");
 						}
-						this.state = 192;
+						this.state = 215;
 						this.match(AyaScriptParser.LT);
-						this.state = 193;
+						this.state = 216;
 						this.expr(16);
 						}
 						break;
@@ -1066,13 +1113,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new GreaterThanOrEqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 194;
+						this.state = 217;
 						if (!(this.precpred(this._ctx, 14))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 14)");
 						}
-						this.state = 195;
+						this.state = 218;
 						this.match(AyaScriptParser.GTE);
-						this.state = 196;
+						this.state = 219;
 						this.expr(15);
 						}
 						break;
@@ -1081,13 +1128,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LessThanOrEqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 197;
+						this.state = 220;
 						if (!(this.precpred(this._ctx, 13))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 13)");
 						}
-						this.state = 198;
+						this.state = 221;
 						this.match(AyaScriptParser.LTE);
-						this.state = 199;
+						this.state = 222;
 						this.expr(14);
 						}
 						break;
@@ -1096,13 +1143,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new EqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 200;
+						this.state = 223;
 						if (!(this.precpred(this._ctx, 12))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 12)");
 						}
-						this.state = 201;
+						this.state = 224;
 						this.match(AyaScriptParser.EQ);
-						this.state = 202;
+						this.state = 225;
 						this.expr(13);
 						}
 						break;
@@ -1111,13 +1158,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new NotEqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 203;
+						this.state = 226;
 						if (!(this.precpred(this._ctx, 11))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 11)");
 						}
-						this.state = 204;
+						this.state = 227;
 						this.match(AyaScriptParser.NEQ);
-						this.state = 205;
+						this.state = 228;
 						this.expr(12);
 						}
 						break;
@@ -1126,13 +1173,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LogicalAndContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 206;
+						this.state = 229;
 						if (!(this.precpred(this._ctx, 10))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 10)");
 						}
-						this.state = 207;
+						this.state = 230;
 						this.match(AyaScriptParser.AND);
-						this.state = 208;
+						this.state = 231;
 						this.expr(11);
 						}
 						break;
@@ -1141,22 +1188,22 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LogicalOrContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 209;
+						this.state = 232;
 						if (!(this.precpred(this._ctx, 9))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 9)");
 						}
-						this.state = 210;
+						this.state = 233;
 						this.match(AyaScriptParser.OR);
-						this.state = 211;
+						this.state = 234;
 						this.expr(10);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 216;
+				this.state = 239;
 				this._errHandler.sync(this);
-				_alt = this.interpreter.adaptivePredict(this._input, 12, this._ctx);
+				_alt = this.interpreter.adaptivePredict(this._input, 14, this._ctx);
 			}
 			}
 		}
@@ -1182,23 +1229,23 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 217;
+			this.state = 240;
 			this.match(AyaScriptParser.T__0);
-			this.state = 221;
+			this.state = 244;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << AyaScriptParser.INT) | (1 << AyaScriptParser.LPAREN) | (1 << AyaScriptParser.EXPORT) | (1 << AyaScriptParser.VAR) | (1 << AyaScriptParser.FUNC) | (1 << AyaScriptParser.RETURN) | (1 << AyaScriptParser.IF) | (1 << AyaScriptParser.WHILE) | (1 << AyaScriptParser.BREAK) | (1 << AyaScriptParser.CONTINUE) | (1 << AyaScriptParser.SEND) | (1 << AyaScriptParser.READ) | (1 << AyaScriptParser.ID))) !== 0) || _la === AyaScriptParser.NOT || _la === AyaScriptParser.STRING) {
 				{
 				{
-				this.state = 218;
+				this.state = 241;
 				this.statement();
 				}
 				}
-				this.state = 223;
+				this.state = 246;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
-			this.state = 224;
+			this.state = 247;
 			this.match(AyaScriptParser.T__1);
 			}
 		}
@@ -1217,25 +1264,291 @@ export class AyaScriptParser extends Parser {
 		return _localctx;
 	}
 	// @RuleVersion(0)
-	public type(): TypeContext {
-		let _localctx: TypeContext = new TypeContext(this._ctx, this.state);
-		this.enterRule(_localctx, 36, AyaScriptParser.RULE_type);
+	public structOrUnionSpecifier(): StructOrUnionSpecifierContext {
+		let _localctx: StructOrUnionSpecifierContext = new StructOrUnionSpecifierContext(this._ctx, this.state);
+		this.enterRule(_localctx, 36, AyaScriptParser.RULE_structOrUnionSpecifier);
+		let _la: number;
+		try {
+			this.state = 260;
+			this._errHandler.sync(this);
+			switch ( this.interpreter.adaptivePredict(this._input, 17, this._ctx) ) {
+			case 1:
+				this.enterOuterAlt(_localctx, 1);
+				{
+				this.state = 249;
+				this.structOrUnion();
+				this.state = 251;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
+				if (_la === AyaScriptParser.ID) {
+					{
+					this.state = 250;
+					this.lvalue(0);
+					}
+				}
+
+				this.state = 253;
+				this.match(AyaScriptParser.T__0);
+				this.state = 254;
+				this.structDeclarationList();
+				this.state = 255;
+				this.match(AyaScriptParser.T__1);
+				}
+				break;
+
+			case 2:
+				this.enterOuterAlt(_localctx, 2);
+				{
+				this.state = 257;
+				this.structOrUnion();
+				this.state = 258;
+				this.lvalue(0);
+				}
+				break;
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				_localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return _localctx;
+	}
+	// @RuleVersion(0)
+	public structOrUnion(): StructOrUnionContext {
+		let _localctx: StructOrUnionContext = new StructOrUnionContext(this._ctx, this.state);
+		this.enterRule(_localctx, 38, AyaScriptParser.RULE_structOrUnion);
+		try {
+			this.enterOuterAlt(_localctx, 1);
+			{
+			this.state = 262;
+			this.match(AyaScriptParser.T__2);
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				_localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return _localctx;
+	}
+	// @RuleVersion(0)
+	public structDeclarationList(): StructDeclarationListContext {
+		let _localctx: StructDeclarationListContext = new StructDeclarationListContext(this._ctx, this.state);
+		this.enterRule(_localctx, 40, AyaScriptParser.RULE_structDeclarationList);
 		let _la: number;
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 226;
+			this.state = 264;
+			this.structItem();
+			this.state = 268;
+			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			if (!(_la === AyaScriptParser.VOID || _la === AyaScriptParser.ID)) {
-			this._errHandler.recoverInline(this);
-			} else {
-				if (this._input.LA(1) === Token.EOF) {
-					this.matchedEOF = true;
+			while (_la === AyaScriptParser.ID) {
+				{
+				{
+				this.state = 265;
+				this.structItem();
 				}
-
-				this._errHandler.reportMatch(this);
-				this.consume();
+				}
+				this.state = 270;
+				this._errHandler.sync(this);
+				_la = this._input.LA(1);
 			}
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				_localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return _localctx;
+	}
+	// @RuleVersion(0)
+	public structItem(): StructItemContext {
+		let _localctx: StructItemContext = new StructItemContext(this._ctx, this.state);
+		this.enterRule(_localctx, 42, AyaScriptParser.RULE_structItem);
+		try {
+			this.enterOuterAlt(_localctx, 1);
+			{
+			this.state = 271;
+			this.lvalue(0);
+			this.state = 272;
+			this.match(AyaScriptParser.COLON);
+			this.state = 273;
+			this.type();
+			this.state = 274;
+			this.match(AyaScriptParser.SEMI);
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				_localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return _localctx;
+	}
+
+	public lvalue(): LvalueContext;
+	public lvalue(_p: number): LvalueContext;
+	// @RuleVersion(0)
+	public lvalue(_p?: number): LvalueContext {
+		if (_p === undefined) {
+			_p = 0;
+		}
+
+		let _parentctx: ParserRuleContext = this._ctx;
+		let _parentState: number = this.state;
+		let _localctx: LvalueContext = new LvalueContext(this._ctx, _parentState);
+		let _prevctx: LvalueContext = _localctx;
+		let _startState: number = 44;
+		this.enterRecursionRule(_localctx, 44, AyaScriptParser.RULE_lvalue, _p);
+		try {
+			let _alt: number;
+			this.enterOuterAlt(_localctx, 1);
+			{
+			{
+			_localctx = new SimpleLValueContext(_localctx);
+			this._ctx = _localctx;
+			_prevctx = _localctx;
+
+			this.state = 277;
+			this.match(AyaScriptParser.ID);
+			}
+			this._ctx._stop = this._input.tryLT(-1);
+			this.state = 289;
+			this._errHandler.sync(this);
+			_alt = this.interpreter.adaptivePredict(this._input, 20, this._ctx);
+			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
+				if (_alt === 1) {
+					if (this._parseListeners != null) {
+						this.triggerExitRuleEvent();
+					}
+					_prevctx = _localctx;
+					{
+					this.state = 287;
+					this._errHandler.sync(this);
+					switch ( this.interpreter.adaptivePredict(this._input, 19, this._ctx) ) {
+					case 1:
+						{
+						_localctx = new FieldAccessLValueContext(new LvalueContext(_parentctx, _parentState));
+						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_lvalue);
+						this.state = 279;
+						if (!(this.precpred(this._ctx, 2))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 2)");
+						}
+						this.state = 280;
+						this.match(AyaScriptParser.DOT);
+						this.state = 281;
+						this.match(AyaScriptParser.ID);
+						}
+						break;
+
+					case 2:
+						{
+						_localctx = new ArrayAccessLValueContext(new LvalueContext(_parentctx, _parentState));
+						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_lvalue);
+						this.state = 282;
+						if (!(this.precpred(this._ctx, 1))) {
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
+						}
+						this.state = 283;
+						this.match(AyaScriptParser.LBRACK);
+						this.state = 284;
+						this.expr(0);
+						this.state = 285;
+						this.match(AyaScriptParser.RBRACK);
+						}
+						break;
+					}
+					}
+				}
+				this.state = 291;
+				this._errHandler.sync(this);
+				_alt = this.interpreter.adaptivePredict(this._input, 20, this._ctx);
+			}
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				_localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.unrollRecursionContexts(_parentctx);
+		}
+		return _localctx;
+	}
+	// @RuleVersion(0)
+	public type(): TypeContext {
+		let _localctx: TypeContext = new TypeContext(this._ctx, this.state);
+		this.enterRule(_localctx, 46, AyaScriptParser.RULE_type);
+		try {
+			this.state = 299;
+			this._errHandler.sync(this);
+			switch ( this.interpreter.adaptivePredict(this._input, 21, this._ctx) ) {
+			case 1:
+				this.enterOuterAlt(_localctx, 1);
+				{
+				this.state = 292;
+				this.match(AyaScriptParser.ID);
+				}
+				break;
+
+			case 2:
+				this.enterOuterAlt(_localctx, 2);
+				{
+				this.state = 293;
+				this.match(AyaScriptParser.VOID);
+				}
+				break;
+
+			case 3:
+				this.enterOuterAlt(_localctx, 3);
+				{
+				this.state = 294;
+				this.match(AyaScriptParser.ID);
+				this.state = 295;
+				this.match(AyaScriptParser.LBRACK);
+				this.state = 296;
+				this.expr(0);
+				this.state = 297;
+				this.match(AyaScriptParser.RBRACK);
+				}
+				break;
 			}
 		}
 		catch (re) {
@@ -1257,6 +1570,9 @@ export class AyaScriptParser extends Parser {
 		switch (ruleIndex) {
 		case 16:
 			return this.expr_sempred(_localctx as ExprContext, predIndex);
+
+		case 22:
+			return this.lvalue_sempred(_localctx as LvalueContext, predIndex);
 		}
 		return true;
 	}
@@ -1303,109 +1619,157 @@ export class AyaScriptParser extends Parser {
 		}
 		return true;
 	}
+	private lvalue_sempred(_localctx: LvalueContext, predIndex: number): boolean {
+		switch (predIndex) {
+		case 13:
+			return this.precpred(this._ctx, 2);
+
+		case 14:
+			return this.precpred(this._ctx, 1);
+		}
+		return true;
+	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03.\xE7\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03/\u0130\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
-		"\x13\t\x13\x04\x14\t\x14\x03\x02\x06\x02*\n\x02\r\x02\x0E\x02+\x03\x03" +
+		"\x13\t\x13\x04\x14\t\x14\x04\x15\t\x15\x04\x16\t\x16\x04\x17\t\x17\x04" +
+		"\x18\t\x18\x04\x19\t\x19\x03\x02\x06\x024\n\x02\r\x02\x0E\x025\x03\x03" +
 		"\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03" +
-		"\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x05\x03?\n\x03" +
-		"\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04E\n\x04\x03\x04\x03\x04\x03\x05" +
-		"\x03\x05\x03\x05\x03\x05\x05\x05M\n\x05\x03\x05\x03\x05\x03\x05\x05\x05" +
-		"R\n\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\x03\x06\x03\x06\x03\x07" +
-		"\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07`\n\x07\f\x07\x0E\x07c\v\x07\x05" +
-		"\x07e\n\x07\x03\x07\x03\x07\x03\b\x03\b\x03\b\x05\bl\n\b\x03\t\x03\t\x03" +
-		"\t\x03\t\x03\n\x03\n\x03\n\x03\n\x03\n\x03\n\x03\n\x05\ny\n\n\x03\v\x03" +
-		"\v\x03\v\x03\v\x03\v\x03\v\x03\f\x03\f\x03\f\x03\r\x03\r\x03\r\x03\x0E" +
-		"\x03\x0E\x03\x0E\x07\x0E\x8A\n\x0E\f\x0E\x0E\x0E\x8D\v\x0E\x03\x0F\x03" +
-		"\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x10\x03\x10\x03\x10\x03\x10\x03" +
-		"\x10\x03\x10\x03\x11\x03\x11\x03\x11\x03\x11\x03\x12\x03\x12\x03\x12\x03" +
+		"\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x05\x03I\n\x03" +
+		"\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04O\n\x04\x03\x04\x03\x04\x03\x04" +
+		"\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04X\n\x04\x03\x04\x03\x04\x05\x04" +
+		"\\\n\x04\x03\x05\x03\x05\x03\x05\x03\x05\x05\x05b\n\x05\x03\x05\x03\x05" +
+		"\x03\x05\x05\x05g\n\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\x03\x06" +
+		"\x03\x06\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07u\n\x07\f\x07" +
+		"\x0E\x07x\v\x07\x05\x07z\n\x07\x03\x07\x03\x07\x03\b\x03\b\x03\b\x05\b" +
+		"\x81\n\b\x03\t\x03\t\x03\t\x03\t\x03\n\x03\n\x03\n\x03\n\x03\n\x03\n\x03" +
+		"\n\x05\n\x8E\n\n\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\f\x03\f\x03\f" +
+		"\x03\r\x03\r\x03\r\x03\x0E\x03\x0E\x03\x0E\x07\x0E\x9F\n\x0E\f\x0E\x0E" +
+		"\x0E\xA2\v\x0E\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x10" +
+		"\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x11\x03\x11\x03\x11\x03\x11" +
+		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12" +
+		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x05\x12" +
+		"\xC5\n\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
 		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
-		"\x12\x03\x12\x03\x12\x05\x12\xAE\n\x12\x03\x12\x03\x12\x03\x12\x03\x12" +
-		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12" +
-		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12" +
-		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12" +
-		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x07\x12" +
-		"\xD7\n\x12\f\x12\x0E\x12\xDA\v\x12\x03\x13\x03\x13\x07\x13\xDE\n\x13\f" +
-		"\x13\x0E\x13\xE1\v\x13\x03\x13\x03\x13\x03\x14\x03\x14\x03\x14\x02\x02" +
-		"\x03\"\x15\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12" +
-		"\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&" +
-		"\x02\x02\x03\x04\x02\x19\x19\x1C\x1C\x02\xFD\x02)\x03\x02\x02\x02\x04" +
-		">\x03\x02\x02\x02\x06@\x03\x02\x02\x02\bH\x03\x02\x02\x02\nU\x03\x02\x02" +
-		"\x02\fZ\x03\x02\x02\x02\x0Eh\x03\x02\x02\x02\x10m\x03\x02\x02\x02\x12" +
-		"q\x03\x02\x02\x02\x14z\x03\x02\x02\x02\x16\x80\x03\x02\x02\x02\x18\x83" +
-		"\x03\x02\x02\x02\x1A\x86\x03\x02\x02\x02\x1C\x8E\x03\x02\x02\x02\x1E\x94" +
-		"\x03\x02\x02\x02 \x9A\x03\x02\x02\x02\"\xAD\x03\x02\x02\x02$\xDB\x03\x02" +
-		"\x02\x02&\xE4\x03\x02\x02\x02(*\x05\x04\x03\x02)(\x03\x02\x02\x02*+\x03" +
-		"\x02\x02\x02+)\x03\x02\x02\x02+,\x03\x02\x02\x02,\x03\x03\x02\x02\x02" +
-		"-?\x05\x06\x04\x02.?\x05\b\x05\x02/?\x05\n\x06\x0201\x05\f\x07\x0212\x07" +
-		"\b\x02\x022?\x03\x02\x02\x023?\x05\x0E\b\x024?\x05\x10\t\x025?\x05\x12" +
-		"\n\x026?\x05\x14\v\x027?\x05\x16\f\x028?\x05\x18\r\x029?\x05\x1C\x0F\x02" +
-		":?\x05\x1E\x10\x02;<\x05\"\x12\x02<=\x07\b\x02\x02=?\x03\x02\x02\x02>" +
-		"-\x03\x02\x02\x02>.\x03\x02\x02\x02>/\x03\x02\x02\x02>0\x03\x02\x02\x02" +
-		">3\x03\x02\x02\x02>4\x03\x02\x02\x02>5\x03\x02\x02\x02>6\x03\x02\x02\x02" +
-		">7\x03\x02\x02\x02>8\x03\x02\x02\x02>9\x03\x02\x02\x02>:\x03\x02\x02\x02" +
-		">;\x03\x02\x02\x02?\x05\x03\x02\x02\x02@A\x07\x10\x02\x02AD\x07\x1C\x02" +
-		"\x02BC\x07\x07\x02\x02CE\x05\"\x12\x02DB\x03\x02\x02\x02DE\x03\x02\x02" +
-		"\x02EF\x03\x02\x02\x02FG\x07\b\x02\x02G\x07\x03\x02\x02\x02HI\x07\x11" +
-		"\x02\x02IJ\x07\x1C\x02\x02JL\x07\f\x02\x02KM\x05\x1A\x0E\x02LK\x03\x02" +
-		"\x02\x02LM\x03\x02\x02\x02MN\x03\x02\x02\x02NQ\x07\r\x02\x02OP\x07\x18" +
-		"\x02\x02PR\x05&\x14\x02QO\x03\x02\x02\x02QR\x03\x02\x02\x02RS\x03\x02" +
-		"\x02\x02ST\x05$\x13\x02T\t\x03\x02\x02\x02UV\x07\x1C\x02\x02VW\x07\x07" +
-		"\x02\x02WX\x05\"\x12\x02XY\x07\b\x02\x02Y\v\x03\x02\x02\x02Z[\x07\x1C" +
-		"\x02\x02[d\x07\f\x02\x02\\a\x05\"\x12\x02]^\x07\x0E\x02\x02^`\x05\"\x12" +
-		"\x02_]\x03\x02\x02\x02`c\x03\x02\x02\x02a_\x03\x02\x02\x02ab\x03\x02\x02" +
-		"\x02be\x03\x02\x02\x02ca\x03\x02\x02\x02d\\\x03\x02\x02\x02de\x03\x02" +
-		"\x02\x02ef\x03\x02\x02\x02fg\x07\r\x02\x02g\r\x03\x02\x02\x02hk\x07\x0F" +
-		"\x02\x02il\x07\x1C\x02\x02jl\x05\b\x05\x02ki\x03\x02\x02\x02kj\x03\x02" +
-		"\x02\x02l\x0F\x03\x02\x02\x02mn\x07\x12\x02\x02no\x05\"\x12\x02op\x07" +
-		"\b\x02\x02p\x11\x03\x02\x02\x02qr\x07\x13\x02\x02rs\x07\f\x02\x02st\x05" +
-		"\"\x12\x02tu\x07\r\x02\x02ux\x05$\x13\x02vw\x07\x14\x02\x02wy\x05$\x13" +
-		"\x02xv\x03\x02\x02\x02xy\x03\x02\x02\x02y\x13\x03\x02\x02\x02z{\x07\x15" +
-		"\x02\x02{|\x07\f\x02\x02|}\x05\"\x12\x02}~\x07\r\x02\x02~\x7F\x05$\x13" +
-		"\x02\x7F\x15\x03\x02\x02\x02\x80\x81\x07\x16\x02\x02\x81\x82\x07\b\x02" +
-		"\x02\x82\x17\x03\x02\x02\x02\x83\x84\x07\x17\x02\x02\x84\x85\x07\b\x02" +
-		"\x02\x85\x19\x03\x02\x02\x02\x86\x8B\x05 \x11\x02\x87\x88\x07\x0E\x02" +
-		"\x02\x88\x8A\x05 \x11\x02\x89\x87\x03\x02\x02\x02\x8A\x8D\x03\x02\x02" +
-		"\x02\x8B\x89\x03\x02\x02\x02\x8B\x8C\x03\x02\x02\x02\x8C\x1B\x03\x02\x02" +
-		"\x02\x8D\x8B\x03\x02\x02\x02\x8E\x8F\x07\x1A\x02\x02\x8F\x90\x07\f\x02" +
-		"\x02\x90\x91\x05\"\x12\x02\x91\x92\x07\r\x02\x02\x92\x93\x07\b\x02\x02" +
-		"\x93\x1D\x03\x02\x02\x02\x94\x95\x07\x1B\x02\x02\x95\x96\x07\f\x02\x02" +
-		"\x96\x97\x05\"\x12\x02\x97\x98\x07\r\x02\x02\x98\x99\x07\b\x02\x02\x99" +
-		"\x1F\x03\x02\x02\x02\x9A\x9B\x07\x1C\x02\x02\x9B\x9C\x07\x18\x02\x02\x9C" +
-		"\x9D\x05&\x14\x02\x9D!\x03\x02\x02\x02\x9E\x9F\b\x12\x01\x02\x9F\xA0\x07" +
-		"*\x02\x02\xA0\xAE\x05\"\x12\n\xA1\xA2\x07\f\x02\x02\xA2\xA3\x05\"\x12" +
-		"\x02\xA3\xA4\x07\r\x02\x02\xA4\xAE\x03\x02\x02\x02\xA5\xAE\x07\x1C\x02" +
-		"\x02\xA6\xAE\x05\f\x07\x02\xA7\xAE\x07\x06\x02\x02\xA8\xAE\x07-\x02\x02" +
-		"\xA9\xAA\x07\x1C\x02\x02\xAA\xAE\x07+\x02\x02\xAB\xAC\x07\x1C\x02\x02" +
-		"\xAC\xAE\x07,\x02\x02\xAD\x9E\x03\x02\x02\x02\xAD\xA1\x03\x02\x02\x02" +
-		"\xAD\xA5\x03\x02\x02\x02\xAD\xA6\x03\x02\x02\x02\xAD\xA7\x03\x02\x02\x02" +
-		"\xAD\xA8\x03\x02\x02\x02\xAD\xA9\x03\x02\x02\x02\xAD\xAB\x03\x02\x02\x02" +
-		"\xAE\xD8\x03\x02\x02\x02\xAF\xB0\f\x17\x02\x02\xB0\xB1\x07\x1F\x02\x02" +
-		"\xB1\xD7\x05\"\x12\x18\xB2\xB3\f\x16\x02\x02\xB3\xB4\x07 \x02\x02\xB4" +
-		"\xD7\x05\"\x12\x17\xB5\xB6\f\x15\x02\x02\xB6\xB7\x07!\x02\x02\xB7\xD7" +
-		"\x05\"\x12\x16\xB8\xB9\f\x14\x02\x02\xB9\xBA\x07\x1D\x02\x02\xBA\xD7\x05" +
-		"\"\x12\x15\xBB\xBC\f\x13\x02\x02\xBC\xBD\x07\x1E\x02\x02\xBD\xD7\x05\"" +
-		"\x12\x14\xBE\xBF\f\x12\x02\x02\xBF\xC0\x07$\x02\x02\xC0\xD7\x05\"\x12" +
-		"\x13\xC1\xC2\f\x11\x02\x02\xC2\xC3\x07%\x02\x02\xC3\xD7\x05\"\x12\x12" +
-		"\xC4\xC5\f\x10\x02\x02\xC5\xC6\x07&\x02\x02\xC6\xD7\x05\"\x12\x11\xC7" +
-		"\xC8\f\x0F\x02\x02\xC8\xC9\x07\'\x02\x02\xC9\xD7\x05\"\x12\x10\xCA\xCB" +
-		"\f\x0E\x02\x02\xCB\xCC\x07\"\x02\x02\xCC\xD7\x05\"\x12\x0F\xCD\xCE\f\r" +
-		"\x02\x02\xCE\xCF\x07#\x02\x02\xCF\xD7\x05\"\x12\x0E\xD0\xD1\f\f\x02\x02" +
-		"\xD1\xD2\x07(\x02\x02\xD2\xD7\x05\"\x12\r\xD3\xD4\f\v\x02\x02\xD4\xD5" +
-		"\x07)\x02\x02\xD5\xD7\x05\"\x12\f\xD6\xAF\x03\x02\x02\x02\xD6\xB2\x03" +
-		"\x02\x02\x02\xD6\xB5\x03\x02\x02\x02\xD6\xB8\x03\x02\x02\x02\xD6\xBB\x03" +
-		"\x02\x02\x02\xD6\xBE\x03\x02\x02\x02\xD6\xC1\x03\x02\x02\x02\xD6\xC4\x03" +
-		"\x02\x02\x02\xD6\xC7\x03\x02\x02\x02\xD6\xCA\x03\x02\x02\x02\xD6\xCD\x03" +
-		"\x02\x02\x02\xD6\xD0\x03\x02\x02\x02\xD6\xD3\x03\x02\x02\x02\xD7\xDA\x03" +
-		"\x02\x02\x02\xD8\xD6\x03\x02\x02\x02\xD8\xD9\x03\x02\x02\x02\xD9#\x03" +
-		"\x02\x02\x02\xDA\xD8\x03\x02\x02\x02\xDB\xDF\x07\x03\x02\x02\xDC\xDE\x05" +
-		"\x04\x03\x02\xDD\xDC\x03\x02\x02\x02\xDE\xE1\x03\x02\x02\x02\xDF\xDD\x03" +
-		"\x02\x02\x02\xDF\xE0\x03\x02\x02\x02\xE0\xE2\x03\x02\x02\x02\xE1\xDF\x03" +
-		"\x02\x02\x02\xE2\xE3\x07\x04\x02\x02\xE3%\x03\x02\x02\x02\xE4\xE5\t\x02" +
-		"\x02\x02\xE5\'\x03\x02\x02\x02\x10+>DLQadkx\x8B\xAD\xD6\xD8\xDF";
+		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
+		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
+		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x07\x12\xEE\n\x12\f\x12\x0E\x12\xF1" +
+		"\v\x12\x03\x13\x03\x13\x07\x13\xF5\n\x13\f\x13\x0E\x13\xF8\v\x13\x03\x13" +
+		"\x03\x13\x03\x14\x03\x14\x05\x14\xFE\n\x14\x03\x14\x03\x14\x03\x14\x03" +
+		"\x14\x03\x14\x03\x14\x03\x14\x05\x14\u0107\n\x14\x03\x15\x03\x15\x03\x16" +
+		"\x03\x16\x07\x16\u010D\n\x16\f\x16\x0E\x16\u0110\v\x16\x03\x17\x03\x17" +
+		"\x03\x17\x03\x17\x03\x17\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18" +
+		"\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x07\x18\u0122\n\x18\f\x18\x0E" +
+		"\x18\u0125\v\x18\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19" +
+		"\x05\x19\u012E\n\x19\x03\x19\x02\x02\x04\".\x1A\x02\x02\x04\x02\x06\x02" +
+		"\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A" +
+		"\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x02\x02" +
+		"\x02\x02\u014A\x023\x03\x02\x02\x02\x04H\x03\x02\x02\x02\x06[\x03\x02" +
+		"\x02\x02\b]\x03\x02\x02\x02\nj\x03\x02\x02\x02\fo\x03\x02\x02\x02\x0E" +
+		"}\x03\x02\x02\x02\x10\x82\x03\x02\x02\x02\x12\x86\x03\x02\x02\x02\x14" +
+		"\x8F\x03\x02\x02\x02\x16\x95\x03\x02\x02\x02\x18\x98\x03\x02\x02\x02\x1A" +
+		"\x9B\x03\x02\x02\x02\x1C\xA3\x03\x02\x02\x02\x1E\xA9\x03\x02\x02\x02 " +
+		"\xAF\x03\x02\x02\x02\"\xC4\x03\x02\x02\x02$\xF2\x03\x02\x02\x02&\u0106" +
+		"\x03\x02\x02\x02(\u0108\x03\x02\x02\x02*\u010A\x03\x02\x02\x02,\u0111" +
+		"\x03\x02\x02\x02.\u0116\x03\x02\x02\x020\u012D\x03\x02\x02\x0224\x05\x04" +
+		"\x03\x0232\x03\x02\x02\x0245\x03\x02\x02\x0253\x03\x02\x02\x0256\x03\x02" +
+		"\x02\x026\x03\x03\x02\x02\x027I\x05\x06\x04\x028I\x05\b\x05\x029I\x05" +
+		"\n\x06\x02:;\x05\f\x07\x02;<\x07\t\x02\x02<I\x03\x02\x02\x02=I\x05\x0E" +
+		"\b\x02>I\x05\x10\t\x02?I\x05\x12\n\x02@I\x05\x14\v\x02AI\x05\x16\f\x02" +
+		"BI\x05\x18\r\x02CI\x05\x1C\x0F\x02DI\x05\x1E\x10\x02EF\x05\"\x12\x02F" +
+		"G\x07\t\x02\x02GI\x03\x02\x02\x02H7\x03\x02\x02\x02H8\x03\x02\x02\x02" +
+		"H9\x03\x02\x02\x02H:\x03\x02\x02\x02H=\x03\x02\x02\x02H>\x03\x02\x02\x02" +
+		"H?\x03\x02\x02\x02H@\x03\x02\x02\x02HA\x03\x02\x02\x02HB\x03\x02\x02\x02" +
+		"HC\x03\x02\x02\x02HD\x03\x02\x02\x02HE\x03\x02\x02\x02I\x05\x03\x02\x02" +
+		"\x02JK\x07\x11\x02\x02KN\x07\x1D\x02\x02LM\x07\b\x02\x02MO\x05\"\x12\x02" +
+		"NL\x03\x02\x02\x02NO\x03\x02\x02\x02OP\x03\x02\x02\x02P\\\x07\t\x02\x02" +
+		"QR\x07\x11\x02\x02RS\x07\x1D\x02\x02ST\x07\x19\x02\x02TW\x050\x19\x02" +
+		"UV\x07\b\x02\x02VX\x05\"\x12\x02WU\x03\x02\x02\x02WX\x03\x02\x02\x02X" +
+		"Y\x03\x02\x02\x02YZ\x07\t\x02\x02Z\\\x03\x02\x02\x02[J\x03\x02\x02\x02" +
+		"[Q\x03\x02\x02\x02\\\x07\x03\x02\x02\x02]^\x07\x12\x02\x02^_\x07\x1D\x02" +
+		"\x02_a\x07\r\x02\x02`b\x05\x1A\x0E\x02a`\x03\x02\x02\x02ab\x03\x02\x02" +
+		"\x02bc\x03\x02\x02\x02cf\x07\x0E\x02\x02de\x07\x19\x02\x02eg\x050\x19" +
+		"\x02fd\x03\x02\x02\x02fg\x03\x02\x02\x02gh\x03\x02\x02\x02hi\x05$\x13" +
+		"\x02i\t\x03\x02\x02\x02jk\x05.\x18\x02kl\x07\b\x02\x02lm\x05\"\x12\x02" +
+		"mn\x07\t\x02\x02n\v\x03\x02\x02\x02op\x07\x1D\x02\x02py\x07\r\x02\x02" +
+		"qv\x05\"\x12\x02rs\x07\x0F\x02\x02su\x05\"\x12\x02tr\x03\x02\x02\x02u" +
+		"x\x03\x02\x02\x02vt\x03\x02\x02\x02vw\x03\x02\x02\x02wz\x03\x02\x02\x02" +
+		"xv\x03\x02\x02\x02yq\x03\x02\x02\x02yz\x03\x02\x02\x02z{\x03\x02\x02\x02" +
+		"{|\x07\x0E\x02\x02|\r\x03\x02\x02\x02}\x80\x07\x10\x02\x02~\x81\x07\x1D" +
+		"\x02\x02\x7F\x81\x05\b\x05\x02\x80~\x03\x02\x02\x02\x80\x7F\x03\x02\x02" +
+		"\x02\x81\x0F\x03\x02\x02\x02\x82\x83\x07\x13\x02\x02\x83\x84\x05\"\x12" +
+		"\x02\x84\x85\x07\t\x02\x02\x85\x11\x03\x02\x02\x02\x86\x87\x07\x14\x02" +
+		"\x02\x87\x88\x07\r\x02\x02\x88\x89\x05\"\x12\x02\x89\x8A\x07\x0E\x02\x02" +
+		"\x8A\x8D\x05$\x13\x02\x8B\x8C\x07\x15\x02\x02\x8C\x8E\x05$\x13\x02\x8D" +
+		"\x8B\x03\x02\x02\x02\x8D\x8E\x03\x02\x02\x02\x8E\x13\x03\x02\x02\x02\x8F" +
+		"\x90\x07\x16\x02\x02\x90\x91\x07\r\x02\x02\x91\x92\x05\"\x12\x02\x92\x93" +
+		"\x07\x0E\x02\x02\x93\x94\x05$\x13\x02\x94\x15\x03\x02\x02\x02\x95\x96" +
+		"\x07\x17\x02\x02\x96\x97\x07\t\x02\x02\x97\x17\x03\x02\x02\x02\x98\x99" +
+		"\x07\x18\x02\x02\x99\x9A\x07\t\x02\x02\x9A\x19\x03\x02\x02\x02\x9B\xA0" +
+		"\x05 \x11\x02\x9C\x9D\x07\x0F\x02\x02\x9D\x9F\x05 \x11\x02\x9E\x9C\x03" +
+		"\x02\x02\x02\x9F\xA2\x03\x02\x02\x02\xA0\x9E\x03\x02\x02\x02\xA0\xA1\x03" +
+		"\x02\x02\x02\xA1\x1B\x03\x02\x02\x02\xA2\xA0\x03\x02\x02\x02\xA3\xA4\x07" +
+		"\x1B\x02\x02\xA4\xA5\x07\r\x02\x02\xA5\xA6\x05\"\x12\x02\xA6\xA7\x07\x0E" +
+		"\x02\x02\xA7\xA8\x07\t\x02\x02\xA8\x1D\x03\x02\x02\x02\xA9\xAA\x07\x1C" +
+		"\x02\x02\xAA\xAB\x07\r\x02\x02\xAB\xAC\x05\"\x12\x02\xAC\xAD\x07\x0E\x02" +
+		"\x02\xAD\xAE\x07\t\x02\x02\xAE\x1F\x03\x02\x02\x02\xAF\xB0\x07\x1D\x02" +
+		"\x02\xB0\xB1\x07\x19\x02\x02\xB1\xB2\x050\x19\x02\xB2!\x03\x02\x02\x02" +
+		"\xB3\xB4\b\x12\x01\x02\xB4\xB5\x07+\x02\x02\xB5\xC5\x05\"\x12\n\xB6\xB7" +
+		"\x07\r\x02\x02\xB7\xB8\x05\"\x12\x02\xB8\xB9\x07\x0E\x02\x02\xB9\xC5\x03" +
+		"\x02\x02\x02\xBA\xC5\x05.\x18\x02\xBB\xC5\x05\f\x07\x02\xBC\xC5\x07\x07" +
+		"\x02\x02\xBD\xC5\x07.\x02\x02\xBE\xBF\x05.\x18\x02\xBF\xC0\x07,\x02\x02" +
+		"\xC0\xC5\x03\x02\x02\x02\xC1\xC2\x05.\x18\x02\xC2\xC3\x07-\x02\x02\xC3" +
+		"\xC5\x03\x02\x02\x02\xC4\xB3\x03\x02\x02\x02\xC4\xB6\x03\x02\x02\x02\xC4" +
+		"\xBA\x03\x02\x02\x02\xC4\xBB\x03\x02\x02\x02\xC4\xBC\x03\x02\x02\x02\xC4" +
+		"\xBD\x03\x02\x02\x02\xC4\xBE\x03\x02\x02\x02\xC4\xC1\x03\x02\x02\x02\xC5" +
+		"\xEF\x03\x02\x02\x02\xC6\xC7\f\x17\x02\x02\xC7\xC8\x07 \x02\x02\xC8\xEE" +
+		"\x05\"\x12\x18\xC9\xCA\f\x16\x02\x02\xCA\xCB\x07!\x02\x02\xCB\xEE\x05" +
+		"\"\x12\x17\xCC\xCD\f\x15\x02\x02\xCD\xCE\x07\"\x02\x02\xCE\xEE\x05\"\x12" +
+		"\x16\xCF\xD0\f\x14\x02\x02\xD0\xD1\x07\x1E\x02\x02\xD1\xEE\x05\"\x12\x15" +
+		"\xD2\xD3\f\x13\x02\x02\xD3\xD4\x07\x1F\x02\x02\xD4\xEE\x05\"\x12\x14\xD5" +
+		"\xD6\f\x12\x02\x02\xD6\xD7\x07%\x02\x02\xD7\xEE\x05\"\x12\x13\xD8\xD9" +
+		"\f\x11\x02\x02\xD9\xDA\x07&\x02\x02\xDA\xEE\x05\"\x12\x12\xDB\xDC\f\x10" +
+		"\x02\x02\xDC\xDD\x07\'\x02\x02\xDD\xEE\x05\"\x12\x11\xDE\xDF\f\x0F\x02" +
+		"\x02\xDF\xE0\x07(\x02\x02\xE0\xEE\x05\"\x12\x10\xE1\xE2\f\x0E\x02\x02" +
+		"\xE2\xE3\x07#\x02\x02\xE3\xEE\x05\"\x12\x0F\xE4\xE5\f\r\x02\x02\xE5\xE6" +
+		"\x07$\x02\x02\xE6\xEE\x05\"\x12\x0E\xE7\xE8\f\f\x02\x02\xE8\xE9\x07)\x02" +
+		"\x02\xE9\xEE\x05\"\x12\r\xEA\xEB\f\v\x02\x02\xEB\xEC\x07*\x02\x02\xEC" +
+		"\xEE\x05\"\x12\f\xED\xC6\x03\x02\x02\x02\xED\xC9\x03\x02\x02\x02\xED\xCC" +
+		"\x03\x02\x02\x02\xED\xCF\x03\x02\x02\x02\xED\xD2\x03\x02\x02\x02\xED\xD5" +
+		"\x03\x02\x02\x02\xED\xD8\x03\x02\x02\x02\xED\xDB\x03\x02\x02\x02\xED\xDE" +
+		"\x03\x02\x02\x02\xED\xE1\x03\x02\x02\x02\xED\xE4\x03\x02\x02\x02\xED\xE7" +
+		"\x03\x02\x02\x02\xED\xEA\x03\x02\x02\x02\xEE\xF1\x03\x02\x02\x02\xEF\xED" +
+		"\x03\x02\x02\x02\xEF\xF0\x03\x02\x02\x02\xF0#\x03\x02\x02\x02\xF1\xEF" +
+		"\x03\x02\x02\x02\xF2\xF6\x07\x03\x02\x02\xF3\xF5\x05\x04\x03\x02\xF4\xF3" +
+		"\x03\x02\x02\x02\xF5\xF8\x03\x02\x02\x02\xF6\xF4\x03\x02\x02\x02\xF6\xF7" +
+		"\x03\x02\x02\x02\xF7\xF9\x03\x02\x02\x02\xF8\xF6\x03\x02\x02\x02\xF9\xFA" +
+		"\x07\x04\x02\x02\xFA%\x03\x02\x02\x02\xFB\xFD\x05(\x15\x02\xFC\xFE\x05" +
+		".\x18\x02\xFD\xFC\x03\x02\x02\x02\xFD\xFE\x03\x02\x02\x02\xFE\xFF\x03" +
+		"\x02\x02\x02\xFF\u0100\x07\x03\x02\x02\u0100\u0101\x05*\x16\x02\u0101" +
+		"\u0102\x07\x04\x02\x02\u0102\u0107\x03\x02\x02\x02\u0103\u0104\x05(\x15" +
+		"\x02\u0104\u0105\x05.\x18\x02\u0105\u0107\x03\x02\x02\x02\u0106\xFB\x03" +
+		"\x02\x02\x02\u0106\u0103\x03\x02\x02\x02\u0107\'\x03\x02\x02\x02\u0108" +
+		"\u0109\x07\x05\x02\x02\u0109)\x03\x02\x02\x02\u010A\u010E\x05,\x17\x02" +
+		"\u010B\u010D\x05,\x17\x02\u010C\u010B\x03\x02\x02\x02\u010D\u0110\x03" +
+		"\x02\x02\x02\u010E\u010C\x03\x02\x02\x02\u010E\u010F\x03\x02\x02\x02\u010F" +
+		"+\x03\x02\x02\x02\u0110\u010E\x03\x02\x02\x02\u0111\u0112\x05.\x18\x02" +
+		"\u0112\u0113\x07\x19\x02\x02\u0113\u0114\x050\x19\x02\u0114\u0115\x07" +
+		"\t\x02\x02\u0115-\x03\x02\x02\x02\u0116\u0117\b\x18\x01\x02\u0117\u0118" +
+		"\x07\x1D\x02\x02\u0118\u0123\x03\x02\x02\x02\u0119\u011A\f\x04\x02\x02" +
+		"\u011A\u011B\x07\n\x02\x02\u011B\u0122\x07\x1D\x02\x02\u011C\u011D\f\x03" +
+		"\x02\x02\u011D\u011E\x07\v\x02\x02\u011E\u011F\x05\"\x12\x02\u011F\u0120" +
+		"\x07\f\x02\x02\u0120\u0122\x03\x02\x02\x02\u0121\u0119\x03\x02\x02\x02" +
+		"\u0121\u011C\x03\x02\x02\x02\u0122\u0125\x03\x02\x02\x02\u0123\u0121\x03" +
+		"\x02\x02\x02\u0123\u0124\x03\x02\x02\x02\u0124/\x03\x02\x02\x02\u0125" +
+		"\u0123\x03\x02\x02\x02\u0126\u012E\x07\x1D\x02\x02\u0127\u012E\x07\x1A" +
+		"\x02\x02\u0128\u0129\x07\x1D\x02\x02\u0129\u012A\x07\v\x02\x02\u012A\u012B" +
+		"\x05\"\x12\x02\u012B\u012C\x07\f\x02\x02\u012C\u012E\x03\x02\x02\x02\u012D" +
+		"\u0126\x03\x02\x02\x02\u012D\u0127\x03\x02\x02\x02\u012D\u0128\x03\x02" +
+		"\x02\x02\u012E1\x03\x02\x02\x02\x185HNW[afvy\x80\x8D\xA0\xC4\xED\xEF\xF6" +
+		"\xFD\u0106\u010E\u0121\u0123\u012D";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!AyaScriptParser.__ATN) {
@@ -1532,6 +1896,10 @@ export class VarDeclContext extends ParserRuleContext {
 	public expr(): ExprContext | undefined {
 		return this.tryGetRuleContext(0, ExprContext);
 	}
+	public COLON(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.COLON, 0); }
+	public type(): TypeContext | undefined {
+		return this.tryGetRuleContext(0, TypeContext);
+	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
@@ -1604,7 +1972,9 @@ export class FuncDeclContext extends ParserRuleContext {
 
 
 export class AssignStmtContext extends ParserRuleContext {
-	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
 	public ASSIGN(): TerminalNode { return this.getToken(AyaScriptParser.ASSIGN, 0); }
 	public expr(): ExprContext {
 		return this.getRuleContext(0, ExprContext);
@@ -2594,7 +2964,9 @@ export class ParenthesesContext extends ExprContext {
 	}
 }
 export class VariableContext extends ExprContext {
-	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
 	constructor(ctx: ExprContext) {
 		super(ctx.parent, ctx.invokingState);
 		this.copyFrom(ctx);
@@ -2704,7 +3076,9 @@ export class StringContext extends ExprContext {
 	}
 }
 export class IncrementContext extends ExprContext {
-	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
 	public INCREAMENT(): TerminalNode { return this.getToken(AyaScriptParser.INCREAMENT, 0); }
 	constructor(ctx: ExprContext) {
 		super(ctx.parent, ctx.invokingState);
@@ -2732,7 +3106,9 @@ export class IncrementContext extends ExprContext {
 	}
 }
 export class DecrementContext extends ExprContext {
-	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
 	public DECREAMENT(): TerminalNode { return this.getToken(AyaScriptParser.DECREAMENT, 0); }
 	constructor(ctx: ExprContext) {
 		super(ctx.parent, ctx.invokingState);
@@ -2799,9 +3175,260 @@ export class BlockContext extends ParserRuleContext {
 }
 
 
+export class StructOrUnionSpecifierContext extends ParserRuleContext {
+	public structOrUnion(): StructOrUnionContext {
+		return this.getRuleContext(0, StructOrUnionContext);
+	}
+	public structDeclarationList(): StructDeclarationListContext | undefined {
+		return this.tryGetRuleContext(0, StructDeclarationListContext);
+	}
+	public lvalue(): LvalueContext | undefined {
+		return this.tryGetRuleContext(0, LvalueContext);
+	}
+	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
+		super(parent, invokingState);
+	}
+	// @Override
+	public get ruleIndex(): number { return AyaScriptParser.RULE_structOrUnionSpecifier; }
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterStructOrUnionSpecifier) {
+			listener.enterStructOrUnionSpecifier(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitStructOrUnionSpecifier) {
+			listener.exitStructOrUnionSpecifier(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitStructOrUnionSpecifier) {
+			return visitor.visitStructOrUnionSpecifier(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
+export class StructOrUnionContext extends ParserRuleContext {
+	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
+		super(parent, invokingState);
+	}
+	// @Override
+	public get ruleIndex(): number { return AyaScriptParser.RULE_structOrUnion; }
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterStructOrUnion) {
+			listener.enterStructOrUnion(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitStructOrUnion) {
+			listener.exitStructOrUnion(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitStructOrUnion) {
+			return visitor.visitStructOrUnion(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
+export class StructDeclarationListContext extends ParserRuleContext {
+	public structItem(): StructItemContext[];
+	public structItem(i: number): StructItemContext;
+	public structItem(i?: number): StructItemContext | StructItemContext[] {
+		if (i === undefined) {
+			return this.getRuleContexts(StructItemContext);
+		} else {
+			return this.getRuleContext(i, StructItemContext);
+		}
+	}
+	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
+		super(parent, invokingState);
+	}
+	// @Override
+	public get ruleIndex(): number { return AyaScriptParser.RULE_structDeclarationList; }
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterStructDeclarationList) {
+			listener.enterStructDeclarationList(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitStructDeclarationList) {
+			listener.exitStructDeclarationList(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitStructDeclarationList) {
+			return visitor.visitStructDeclarationList(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
+export class StructItemContext extends ParserRuleContext {
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
+	public COLON(): TerminalNode { return this.getToken(AyaScriptParser.COLON, 0); }
+	public type(): TypeContext {
+		return this.getRuleContext(0, TypeContext);
+	}
+	public SEMI(): TerminalNode { return this.getToken(AyaScriptParser.SEMI, 0); }
+	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
+		super(parent, invokingState);
+	}
+	// @Override
+	public get ruleIndex(): number { return AyaScriptParser.RULE_structItem; }
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterStructItem) {
+			listener.enterStructItem(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitStructItem) {
+			listener.exitStructItem(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitStructItem) {
+			return visitor.visitStructItem(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
+export class LvalueContext extends ParserRuleContext {
+	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
+		super(parent, invokingState);
+	}
+	// @Override
+	public get ruleIndex(): number { return AyaScriptParser.RULE_lvalue; }
+	public copyFrom(ctx: LvalueContext): void {
+		super.copyFrom(ctx);
+	}
+}
+export class SimpleLValueContext extends LvalueContext {
+	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	constructor(ctx: LvalueContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterSimpleLValue) {
+			listener.enterSimpleLValue(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitSimpleLValue) {
+			listener.exitSimpleLValue(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitSimpleLValue) {
+			return visitor.visitSimpleLValue(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class FieldAccessLValueContext extends LvalueContext {
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
+	public DOT(): TerminalNode { return this.getToken(AyaScriptParser.DOT, 0); }
+	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	constructor(ctx: LvalueContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterFieldAccessLValue) {
+			listener.enterFieldAccessLValue(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitFieldAccessLValue) {
+			listener.exitFieldAccessLValue(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitFieldAccessLValue) {
+			return visitor.visitFieldAccessLValue(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class ArrayAccessLValueContext extends LvalueContext {
+	public lvalue(): LvalueContext {
+		return this.getRuleContext(0, LvalueContext);
+	}
+	public LBRACK(): TerminalNode { return this.getToken(AyaScriptParser.LBRACK, 0); }
+	public expr(): ExprContext {
+		return this.getRuleContext(0, ExprContext);
+	}
+	public RBRACK(): TerminalNode { return this.getToken(AyaScriptParser.RBRACK, 0); }
+	constructor(ctx: LvalueContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterArrayAccessLValue) {
+			listener.enterArrayAccessLValue(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitArrayAccessLValue) {
+			listener.exitArrayAccessLValue(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitArrayAccessLValue) {
+			return visitor.visitArrayAccessLValue(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+
+
 export class TypeContext extends ParserRuleContext {
 	public ID(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.ID, 0); }
 	public VOID(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.VOID, 0); }
+	public LBRACK(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.LBRACK, 0); }
+	public expr(): ExprContext | undefined {
+		return this.tryGetRuleContext(0, ExprContext);
+	}
+	public RBRACK(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.RBRACK, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}

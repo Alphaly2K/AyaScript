@@ -1,18 +1,29 @@
-﻿import {ASTNode, FunctionCall, Parameter, Program, SendStatement} from "./AST/AST";
+﻿import {
+    ASTNode,
+    FunctionCall,
+    FunctionDeclaration,
+    LValue,
+    Parameter,
+    Program,
+    SendStatement,
+    SimpleLValue
+} from "./AST/AST";
+import {RuntimeMemory} from "./Memory";
+import {
+    FunctionSymbolTable,
+    FunctionSymbolTableEntry,
+    SymbolTable,
+    VariableSymbolTable,
+    VariableSymbolTableEntry
+} from "./SymbolTable";
 
 
-let globalFunction: Record<string, any> = {};
-let globalVariable: Record<string, any> = {};
-let globalSymbolTable: Record<string, Record<string, any>> = {"FUNCTION": globalFunction, "VAR": globalVariable};
-
+let globalFunction: FunctionSymbolTable = new FunctionSymbolTable();
+let globalVariable: VariableSymbolTable = new VariableSymbolTable();
+let runtimeMemory: RuntimeMemory = new RuntimeMemory();
 export class Interpreter {
-    private functionScope: Record<string, any> = {};
-    private variableScope: Record<string, any> = {};
-    private currentScope: Record<string, Record<string, any>> =
-        {
-            "FUNCTION": this.functionScope,
-            "VAR": this.variableScope,
-        };
+    private functionScope: FunctionSymbolTable = new FunctionSymbolTable();
+    private variableScope: VariableSymbolTable = new VariableSymbolTable();
     private loopStack: Array<"LOOP" | "BREAK" | "CONTINUE"> = [];
     private returnValue: any = null;
     private output: string[] = [];
@@ -36,12 +47,11 @@ export class Interpreter {
                 break;
 
             case "ExportStatement":
-                const value = this.evaluate(node.body);
                 if (node.body.type === "FunctionDeclaration") {
-                    globalSymbolTable["FUNCTION"][value] = this.currentScope["FUNCTION"][value];
+                    globalFunction.addEntry(this.functionScope.lookup(node.body.name))
                 }
-                if (node.body.type === "Variable") {
-                    globalSymbolTable["VAR"][value] = this.currentScope["VAR"][value];
+                if (node.body.type === "SimpleLValue") {
+                    globalVariable.addEntry(this.variableScope.lookup(node.body.name));
                 }
                 break
             case "SendStatement":
@@ -69,7 +79,7 @@ export class Interpreter {
                 throw "CONTINUE";
 
             case "FunctionDeclaration":
-                this.currentScope["FUNCTION"][node.name] = node;
+                this.functionScope.addEntry(node)
                 return node.name;
 
             case "ReturnStatement":
@@ -80,27 +90,25 @@ export class Interpreter {
                 return this.callFunction(node);
 
             case "VariableDeclaration":
-                this.currentScope["VAR"][node.name] = node.value ? this.evaluate(node.value) : undefined;
+                if (node.value) {
+                    this.variableScope.addEntry({type: (typeof this.evaluate(node.value)).toString(), name: node.name, isArray: false, value: this.evaluate(node.value)});
+                }
                 break;
 
             case "Integer":
                 return node.value;
 
             case "Assignment":
-                const target = node.target.name;
-                this.currentScope[target] = node.value;
+                const target = this.evaluate(node.target);
+                this.variableScope.updateValue(target, node.value);
                 break;
 
-            case "Variable":
-                // @ts-ignore
-                if (this.currentScope["VAR"][node.name]) {
-                    // @ts-ignore
-                    return this.currentScope["VAR"][node.name];
+            case "SimpleLValue":
+                if (this.variableScope.hasEntry(node.name)) {
+                    return this.variableScope.lookup(node.name).value;
                 }
-                // @ts-ignore
-                if (this.globalSymbolTable["VAR"][node.name]) {
-                    // @ts-ignore
-                    return this.globalSymbolTable["VAR"][node.name];
+                if (globalVariable.hasEntry(node.name)) {
+                    return globalVariable.lookup(node.name).value;
                 }
                 throw new Error("Unrecognized variable " + node.name);
 
@@ -147,19 +155,20 @@ export class Interpreter {
                     case "++":
                         try {
                             // @ts-ignore
-                            this.currentScope["VAR"][node.operand.name]++;
-
-                            // @ts-ignore
-                            return this.currentScope["VAR"][node.operand.name];
+                            const operand = this.resolveLValue(node.operand).name
+                            const source = this.variableScope.lookup(operand).value;
+                            this.variableScope.updateValue(operand, source + 1);
+                            return source + 1;
                         } catch (e: any) {
                             throw new Error("Unrecognized variable: " + node.operand);
                         }
                     case "--":
                         try {
                             // @ts-ignore
-                            this.currentScope["VAR"][node.operand.name]--;
-                            // @ts-ignore
-                            return this.currentScope["VAR"][node.operand.name];
+                            const operand = this.resolveLValue(node.operand).name
+                            const source = this.variableScope.lookup(operand).value;
+                            this.variableScope.updateValue(operand, source - 1);
+                            return source - 1;
                         } catch (e: any) {
                             throw new Error("Unrecognized variable: " + node.operand);
                         }
@@ -176,15 +185,24 @@ export class Interpreter {
         console.log(this.evaluate(node.body));
     }
 
+    resolveLValue(node: SimpleLValue): VariableSymbolTableEntry {
+        if (this.variableScope.hasEntry(node.name)) {
+            return this.variableScope.lookup(node.name);
+        }
+        if (globalVariable.hasEntry(node.name)) {
+            return globalVariable.lookup(node.name);
+        }
+        throw new Error("Unrecognized variable " + node.name);
+    }
     callFunction(node: FunctionCall): any {
-        const func = this.currentScope["FUNCTION"][node.name] ? this.currentScope["FUNCTION"][node.name] : globalSymbolTable["FUNCTION"][node.name];
+        const func = this.functionScope.hasEntry(node.name) ? this.functionScope.lookup(node.name) : globalFunction.lookup(node.name);
         if (!func) {
             throw new Error(`Function '${node.name}' not found.`);
         }
-        const preScope = this.currentScope;
+        const preScope = this.variableScope;
         func.params.forEach((param: Parameter, index: number) => {
             const paramName = param.name;
-            this.currentScope["VAR"][paramName] = this.evaluate(node.arguments[index]);
+            this.variableScope.addEntryFuncParam(paramName,this.evaluate(node.arguments[index])) ;
         });
 
         try {
@@ -201,7 +219,7 @@ export class Interpreter {
         }
         const returnValue = this.returnValue;
         this.returnValue = null;
-        this.currentScope = preScope;
+        this.variableScope = preScope;
         return returnValue;
     }
 

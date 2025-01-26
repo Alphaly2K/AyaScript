@@ -3,6 +3,9 @@
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
+import { SimpleLValueContext } from "./AyaScriptParser";
+import { FieldAccessLValueContext } from "./AyaScriptParser";
+import { ArrayAccessLValueContext } from "./AyaScriptParser";
 import { MultiplicationContext } from "./AyaScriptParser";
 import { DivisionContext } from "./AyaScriptParser";
 import { ModulusContext } from "./AyaScriptParser";
@@ -42,6 +45,11 @@ import { ReadStmtContext } from "./AyaScriptParser";
 import { ParamContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
+import { StructOrUnionSpecifierContext } from "./AyaScriptParser";
+import { StructOrUnionContext } from "./AyaScriptParser";
+import { StructDeclarationListContext } from "./AyaScriptParser";
+import { StructItemContext } from "./AyaScriptParser";
+import { LvalueContext } from "./AyaScriptParser";
 import { TypeContext } from "./AyaScriptParser";
 
 
@@ -53,6 +61,30 @@ import { TypeContext } from "./AyaScriptParser";
  * operations with no return type.
  */
 export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
+	/**
+	 * Visit a parse tree produced by the `SimpleLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitSimpleLValue?: (ctx: SimpleLValueContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `FieldAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFieldAccessLValue?: (ctx: FieldAccessLValueContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `ArrayAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => Result;
+
 	/**
 	 * Visit a parse tree produced by the `Multiplication`
 	 * labeled alternative in `AyaScriptParser.expr`.
@@ -346,6 +378,41 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitBlock?: (ctx: BlockContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.structOrUnionSpecifier`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.structOrUnion`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitStructOrUnion?: (ctx: StructOrUnionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.structDeclarationList`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitStructDeclarationList?: (ctx: StructDeclarationListContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.structItem`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitStructItem?: (ctx: StructItemContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitLvalue?: (ctx: LvalueContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `AyaScriptParser.type`.

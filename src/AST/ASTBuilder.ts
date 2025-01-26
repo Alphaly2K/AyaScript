@@ -9,18 +9,18 @@ import {
     FunctionCall,
     FunctionDeclaration,
     IfStatement, Integer,
-    Literal,
+    LValue,
     Parameter,
     Program,
-    ReturnStatement, SendStatement, UnaryExpression, Variable,
+    ReturnStatement, SendStatement, UnaryExpression,
     VariableDeclaration,
     WhileStatement
 } from "./AST";
 import {
-    AdditionContext,
+    AdditionContext, ArrayAccessLValueContext,
     BlockContext, DecrementContext,
     DivisionContext,
-    EqualContext, ExportStmtContext,
+    EqualContext, ExportStmtContext, FieldAccessLValueContext,
     FuncCallContext,
     FuncDeclContext,
     GreaterThanContext,
@@ -31,17 +31,16 @@ import {
     LessThanOrEqualContext,
     LogicalAndContext,
     LogicalNotContext,
-    LogicalOrContext,
+    LogicalOrContext, LvalueContext,
     ModulusContext,
     MultiplicationContext,
     NotEqualContext,
     ParamContext,
     ParamListContext,
-    SendStmtContext, StatementContext,
+    SendStmtContext, SimpleLValueContext, StatementContext,
     StringContext,
     SubtractionContext,
     VarDeclContext,
-    VariableContext
 } from "../ANTLR/AyaScriptParser";
 
 export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScriptVisitor<any> {
@@ -284,19 +283,16 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
     }
 
     visitIncrement(ctx: IncrementContext): UnaryExpression {
-        const name = ctx.ID().text;
+        const name = ctx.lvalue().text;
         return {
             type: "UnaryExpression",
             operator: "++",
-            operand: {
-                type:"Variable",
-                name
-            },
+            operand: this.visit(ctx.lvalue())
         }
     }
 
     visitStatement(ctx: StatementContext): any {
-        if(ctx.expr()!=undefined){
+        if (ctx.expr() != undefined) {
             // @ts-ignore
             return this.visit(ctx.expr());
         }
@@ -306,28 +302,44 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
     visitExportStmt(ctx: ExportStmtContext): ExportStatement {
         const body = this.visitChildren(ctx);
         return {
-            type:"ExportStatement",
-            body:body,
+            type: "ExportStatement",
+            body: body,
         }
     }
 
     visitDecrement(ctx: DecrementContext): UnaryExpression {
-        const name = ctx.ID().text;
+        console.log(this.visit(ctx.lvalue()));
         return {
             type: "UnaryExpression",
             operator: "--",
-            operand: {
-                type:"Variable",
-                name
-            },
+            operand: this.visit(ctx.lvalue())
         }
     }
 
-    visitVariable(ctx: VariableContext) {
-        const varId = ctx.text
+    visitSimpleLValue(ctx: SimpleLValueContext): LValue {
         return {
-            type: "Variable",
-            name: varId,
+            type: "SimpleLValue",
+            name: ctx.ID().text
+        };
+    }
+
+    visitFieldAccessLValue(ctx: FieldAccessLValueContext): LValue {
+        const object = this.visit(ctx.lvalue());
+        const field = ctx.ID().text;
+        return {
+            type: "FieldAccessLValue",
+            object,
+            field
+        };
+    }
+
+    visitArrayAccessLValue(ctx: ArrayAccessLValueContext): LValue {
+        const array = this.visit(ctx.lvalue());
+        const index = this.visitExpr(ctx.expr());
+        return {
+            type: "ArrayAccessLValue",
+            array,
+            index: index
         };
     }
 
@@ -366,14 +378,6 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
         return {type: "Block", body};
     }
 
-    visitLiteral(ctx: any): Literal {
-        if (ctx.INT()) {
-            return {type: "Literal", value: parseInt(ctx.INT().getText(), 10)};
-        } else if (ctx.STRING()) {
-            return {type: "Literal", value: ctx.STRING().getText().slice(1, -1)};
-        }
-        throw new Error("Unknown literal type");
-    }
 
     visitExpr(ctx: any): ASTNode {
         if (ctx.expr().length === 1) {

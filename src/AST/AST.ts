@@ -13,7 +13,7 @@
     | Block
     | BinaryExpression
     | UnaryExpression
-    | Variable
+    | LValue
     | Parameter
     | Integer
     | Literal
@@ -41,9 +41,24 @@ export interface Integer {
     value: number;
 }
 
-export interface Variable {
-    type: "Variable";
+export type LValue =
+    | SimpleLValue
+    | FieldAccessLValue
+    | ArrayAccessLValue;
+
+export interface SimpleLValue {
+    type: "SimpleLValue";
     name: string;
+}
+interface FieldAccessLValue {
+    type: "FieldAccessLValue";
+    object: LValue;
+    field: string;
+}
+interface ArrayAccessLValue {
+    type: "ArrayAccessLValue";
+    array: LValue;
+    index: ASTNode;
 }
 
 export interface SendStatement {
@@ -83,7 +98,7 @@ export interface Parameter {
 
 export interface Assignment {
     type: "Assignment";
-    target: Variable; // 赋值目标
+    target: LValue; // 赋值目标
     value: ASTNode; // 表达式的值
 }
 
