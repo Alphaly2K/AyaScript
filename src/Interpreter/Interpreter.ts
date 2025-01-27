@@ -1,14 +1,4 @@
-﻿import {
-    ASTNode,
-    FunctionCall,
-    FunctionDeclaration,
-    LValue,
-    Parameter,
-    Program,
-    SendStatement,
-    SimpleLValue
-} from "./AST/AST";
-import {RuntimeMemory} from "./Memory";
+﻿import {RuntimeMemory} from "./Memory";
 import {
     FunctionSymbolTable,
     FunctionSymbolTableEntry,
@@ -16,6 +6,12 @@ import {
     VariableSymbolTable,
     VariableSymbolTableEntry
 } from "./SymbolTable";
+import {Program} from "../AST/Program";
+import {ASTNode} from "../AST/ASTNode";
+import {SendStatement} from "../AST/SendStatement";
+import {SimpleLValue} from "../AST/LValue";
+import {FunctionCall} from "../AST/FunctionCall";
+import {Parameter} from "../AST/Parameter";
 
 
 let globalFunction: FunctionSymbolTable = new FunctionSymbolTable();
@@ -109,21 +105,26 @@ export class Interpreter {
                         if(node.varType.isArray){
                             let address : number;
                             let size : number;
-                            const valueArray = <ASTNode[]>node.value
-                            if (!node.varType.arraySize){
-                                size = (valueArray).length;
-                            }else{
-                                const tmp = this.evaluate(node.varType.arraySize)
-                                if (typeof tmp !== "number"){
-                                    throw new Error("The variable size must be a number");
+                            if(node.value.type==="ArrayList")
+                            {
+                                const valueArray = node.value.value
+                                if (!node.varType.arraySize){
+                                    size = valueArray.length;
+                                }else{
+                                    const tmp = this.evaluate(node.varType.arraySize)
+                                    if (typeof tmp !== "number"){
+                                        throw new Error("The variable size must be a number");
+                                    }
+                                    size = tmp;
                                 }
-                                size = tmp;
+                                address = runtimeMemory.allocate(size)
+                                valueArray.forEach((value, index) => {
+                                    runtimeMemory.set(address+index, this.evaluate(value));
+                                })
+                                this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:true, memoryAddress: address});
+                            }else{
+                                throw new Error("The value cannot be assigned to a array variable ");
                             }
-                            address = runtimeMemory.allocate(size)
-                            valueArray.forEach((value, index) => {
-                                runtimeMemory.set(address+index, this.evaluate(value));
-                            })
-                            this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:true, memoryAddress: address});
                         }else{
                             this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:node.varType.isArray, value: this.evaluate(<ASTNode>node.value)});
                         }
@@ -131,22 +132,25 @@ export class Interpreter {
                 }else{                                                                                                  // Variable Declaration With Type Inference
                     if(node.value!==null)
                     {
-                        if(node.value instanceof Array){
+                        if(node.value.type === "ArrayList"){
                             const valueArray = node.value
-                            const size = (valueArray).length;
+                            const size = valueArray.value.length;
                             const address = runtimeMemory.allocate(size)
-                            valueArray.forEach((value, index) => {
+                            valueArray.value.forEach((value, index) => {
                                 runtimeMemory.set(address+index, this.evaluate(value));
                             })
                             this.variableScope.addEntry({type: typeof runtimeMemory.get(address), name: node.name, isArray:true, memoryAddress: address});
                         }else{
                             this.variableScope.addEntry({type: (typeof this.evaluate(<ASTNode>node.value)).toString(), name: node.name, isArray: false, value: this.evaluate(<ASTNode>node.value)});
                         }
+                    }else{
+                        throw new Error("Unrecognized type, no type inference available.")
                     }
-                    throw new Error("Unrecognized type, no type inference available.")
                 }
                 break;
+            case "ArrayList":
 
+                break;
             case "Integer":
                 return node.value;
 
@@ -164,6 +168,32 @@ export class Interpreter {
                 }
                 throw new Error("Unrecognized variable " + node.name);
 
+            case "ArrayAccessLValue":
+                const lvalue = node.array
+                const index = this.evaluate(node.index);
+                if (typeof index !== "number"){
+                    throw new Error("The variable index must be a number");
+                }
+                if (lvalue.type === "SimpleLValue"){
+                    if(this.variableScope.hasEntry(lvalue.name)){
+                        const value = this.variableScope.lookup(lvalue.name)
+                        if(!value.isArray)
+                            throw new Error("The variable must be an array");
+                        const address = <number>value.memoryAddress
+                        return runtimeMemory.get(address+index)
+                    }else{
+                        if(globalVariable.hasEntry(lvalue.name)){
+                            const value = globalVariable.lookup(lvalue.name)
+                            if(!value.isArray)
+                                throw new Error("The variable must be an array");
+                            const address = <number>value.memoryAddress
+                            return runtimeMemory.get(address+index)
+                        }else{
+                            throw new Error("Unrecognized variable " + lvalue.name);
+                        }
+                    }
+                }
+                break;
             case "Literal":
                 return node.value;
 

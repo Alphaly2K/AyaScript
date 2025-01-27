@@ -1,10 +1,10 @@
 ﻿import {AyaScriptLexer} from "./ANTLR/AyaScriptLexer";
 import {CharStreams, CommonTokenStream} from "antlr4ts";
 import {AyaScriptParser} from "./ANTLR/AyaScriptParser";
-import {ASTBuilder} from "./AST/ASTBuilder";
-import {Interpreter} from "./Interpreter";
+import {ASTBuilder} from "./Utils/ASTBuilder";
+import {Interpreter} from "./Interpreter/Interpreter";
 
-export function repl(input: string): string[] {
+export function REPL(input: string): string[] {
     const lexer = new AyaScriptLexer(CharStreams.fromString(input));
     const tokenStream = new CommonTokenStream(lexer);
     const parser = new AyaScriptParser(tokenStream);

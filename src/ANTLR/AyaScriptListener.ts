@@ -6,9 +6,6 @@ import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 import { CommonTypeContext } from "./AyaScriptParser";
 import { VoidTypeContext } from "./AyaScriptParser";
 import { ArrayTypeContext } from "./AyaScriptParser";
-import { SimpleLValueContext } from "./AyaScriptParser";
-import { FieldAccessLValueContext } from "./AyaScriptParser";
-import { ArrayAccessLValueContext } from "./AyaScriptParser";
 import { MultiplicationContext } from "./AyaScriptParser";
 import { DivisionContext } from "./AyaScriptParser";
 import { ModulusContext } from "./AyaScriptParser";
@@ -30,6 +27,10 @@ import { IntegerContext } from "./AyaScriptParser";
 import { StringContext } from "./AyaScriptParser";
 import { IncrementContext } from "./AyaScriptParser";
 import { DecrementContext } from "./AyaScriptParser";
+import { ArrayListContext } from "./AyaScriptParser";
+import { SimpleLValueContext } from "./AyaScriptParser";
+import { FieldAccessLValueContext } from "./AyaScriptParser";
+import { ArrayAccessLValueContext } from "./AyaScriptParser";
 import { TypeInferenceVarDeclContext } from "./AyaScriptParser";
 import { ExplicitVarDeclContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
@@ -51,6 +52,7 @@ import { ParamContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
 import { StructOrUnionSpecifierContext } from "./AyaScriptParser";
+import { ArrListContext } from "./AyaScriptParser";
 import { StructOrUnionContext } from "./AyaScriptParser";
 import { StructDeclarationListContext } from "./AyaScriptParser";
 import { StructItemContext } from "./AyaScriptParser";
@@ -101,45 +103,6 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitArrayType?: (ctx: ArrayTypeContext) => void;
-
-	/**
-	 * Enter a parse tree produced by the `SimpleLValue`
-	 * labeled alternative in `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	enterSimpleLValue?: (ctx: SimpleLValueContext) => void;
-	/**
-	 * Exit a parse tree produced by the `SimpleLValue`
-	 * labeled alternative in `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	exitSimpleLValue?: (ctx: SimpleLValueContext) => void;
-
-	/**
-	 * Enter a parse tree produced by the `FieldAccessLValue`
-	 * labeled alternative in `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	enterFieldAccessLValue?: (ctx: FieldAccessLValueContext) => void;
-	/**
-	 * Exit a parse tree produced by the `FieldAccessLValue`
-	 * labeled alternative in `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	exitFieldAccessLValue?: (ctx: FieldAccessLValueContext) => void;
-
-	/**
-	 * Enter a parse tree produced by the `ArrayAccessLValue`
-	 * labeled alternative in `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	enterArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => void;
-	/**
-	 * Exit a parse tree produced by the `ArrayAccessLValue`
-	 * labeled alternative in `AyaScriptParser.lvalue`.
-	 * @param ctx the parse tree
-	 */
-	exitArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => void;
 
 	/**
 	 * Enter a parse tree produced by the `Multiplication`
@@ -415,6 +378,58 @@ export interface AyaScriptListener extends ParseTreeListener {
 	exitDecrement?: (ctx: DecrementContext) => void;
 
 	/**
+	 * Enter a parse tree produced by the `ArrayList`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	enterArrayList?: (ctx: ArrayListContext) => void;
+	/**
+	 * Exit a parse tree produced by the `ArrayList`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	exitArrayList?: (ctx: ArrayListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `SimpleLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterSimpleLValue?: (ctx: SimpleLValueContext) => void;
+	/**
+	 * Exit a parse tree produced by the `SimpleLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitSimpleLValue?: (ctx: SimpleLValueContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `FieldAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterFieldAccessLValue?: (ctx: FieldAccessLValueContext) => void;
+	/**
+	 * Exit a parse tree produced by the `FieldAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitFieldAccessLValue?: (ctx: FieldAccessLValueContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `ArrayAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	enterArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => void;
+	/**
+	 * Exit a parse tree produced by the `ArrayAccessLValue`
+	 * labeled alternative in `AyaScriptParser.lvalue`.
+	 * @param ctx the parse tree
+	 */
+	exitArrayAccessLValue?: (ctx: ArrayAccessLValueContext) => void;
+
+	/**
 	 * Enter a parse tree produced by the `TypeInferenceVarDecl`
 	 * labeled alternative in `AyaScriptParser.varDecl`.
 	 * @param ctx the parse tree
@@ -648,6 +663,17 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.arrList`.
+	 * @param ctx the parse tree
+	 */
+	enterArrList?: (ctx: ArrListContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.arrList`.
+	 * @param ctx the parse tree
+	 */
+	exitArrList?: (ctx: ArrListContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `AyaScriptParser.structOrUnion`.

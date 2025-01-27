@@ -1,23 +1,7 @@
 ﻿import {AyaScriptVisitor} from "../ANTLR/AyaScriptVisitor";
 import {AbstractParseTreeVisitor} from "antlr4ts/tree";
 import {
-    Assignment,
-    ASTNode, BinaryExpression,
-    Block,
-    BreakStatement,
-    ContinueStatement, ExportStatement,
-    FunctionCall,
-    FunctionDeclaration,
-    IfStatement, Integer,
-    LValue,
-    Parameter,
-    Program,
-    ReturnStatement, SendStatement, Type, UnaryExpression,
-    VariableDeclaration,
-    WhileStatement
-} from "./AST";
-import {
-    AdditionContext, ArrayAccessLValueContext, ArrayTypeContext,
+    AdditionContext, ArrayAccessLValueContext, ArrayListContext, ArrayTypeContext,
     BlockContext, CommonTypeContext, DecrementContext,
     DivisionContext,
     EqualContext, ExplicitVarDeclContext, ExportStmtContext, FieldAccessLValueContext,
@@ -42,6 +26,27 @@ import {
     SubtractionContext, TypeContext, TypeInferenceVarDeclContext,
     VarDeclContext, VoidTypeContext,
 } from "../ANTLR/AyaScriptParser";
+import {Program} from "../AST/Program";
+import {VariableDeclaration} from "../AST/VariableDeclaration";
+import {Type} from "../AST/Type";
+import {FunctionDeclaration} from "../AST/FunctionDeclaration";
+import {Parameter} from "../AST/Parameter";
+import {Assignment} from "../AST/Assignment";
+import {FunctionCall} from "../AST/FunctionCall";
+import {SendStatement} from "../AST/SendStatement";
+import {Integer} from "../AST/Integer";
+import {BinaryExpression} from "../AST/BinaryExpression";
+import {IfStatement} from "../AST/IfStatement";
+import {UnaryExpression} from "../AST/UnaryExpression";
+import {ExportStatement} from "../AST/ExportStatement";
+import {LValue} from "../AST/LValue";
+import {WhileStatement} from "../AST/WhileStatement";
+import {ReturnStatement} from "../AST/ReturnStatement";
+import {BreakStatement} from "../AST/BreakStatement";
+import {ContinueStatement} from "../AST/ContinueStatement";
+import {Block} from "../AST/Block";
+import {ASTNode} from "../AST/ASTNode";
+import {ArrayList} from "../AST/ArrayList";
 
 export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScriptVisitor<any> {
     visitProgram(ctx: any): Program {
@@ -105,6 +110,17 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
             name:"void",
             isArray: false,
             arraySize: null
+        }
+    }
+
+    visitArrayList(ctx: ArrayListContext): ArrayList {
+        let value: Array<any> = [];
+        ctx.arrList().expr().forEach(expr => {
+            value.push(this.visit(expr));
+        })
+        return {
+            type:"ArrayList",
+            value:value
         }
     }
 
@@ -431,6 +447,8 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
 
 
     visitExpr(ctx: any): ASTNode {
+        if(ctx instanceof IntegerContext)
+            return this.visit(ctx);
         if (ctx.expr().length === 1) {
             return this.visit(ctx.expr(0));
         }

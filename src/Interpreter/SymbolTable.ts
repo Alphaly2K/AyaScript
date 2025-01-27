@@ -1,4 +1,5 @@
-﻿import {FunctionDeclaration} from "./AST/AST";
+﻿import {FunctionDeclaration} from "../AST/FunctionDeclaration";
+
 export type SymbolTable = FunctionSymbolTable|VariableSymbolTable;
 export type VariableSymbolTableEntry = {
     name: string;               // 变量名

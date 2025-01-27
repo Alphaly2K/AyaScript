@@ -1,5 +1,5 @@
 ﻿export type Memory = {
-    [address: number]: any; // 用地址索引存储数组或变量值
+    [address: number]: any;
 };
 
 export class RuntimeMemory {
