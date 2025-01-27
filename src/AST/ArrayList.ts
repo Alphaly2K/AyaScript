@@ -1,4 +1,4 @@
-﻿export interface ArrayList{
-    type: "ArrayList",
-    value: Array<any>
+﻿export interface ArrayList {
+  type: "ArrayList";
+  value: Array<any>;
 }

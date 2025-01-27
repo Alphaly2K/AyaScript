@@ -1,4 +1,4 @@
-import {REPL} from "./REPL";
+import { REPL } from "./REPL";
 
 const code = `
 func add(a: int, b: int): int

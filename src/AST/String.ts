@@ -1,4 +1,4 @@
-﻿export interface String{
-    type:"String";
-    value:string;
+﻿export interface String {
+  type: "String";
+  value: string;
 }

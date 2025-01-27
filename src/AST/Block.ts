@@ -1,6 +1,6 @@
-﻿import {ASTNode} from "./ASTNode";
+﻿import { ASTNode } from "./ASTNode";
 
 export interface Block {
-    type: "Block";
-    body: ASTNode[];
+  type: "Block";
+  body: ASTNode[];
 }

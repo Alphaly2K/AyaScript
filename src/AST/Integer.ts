@@ -1,4 +1,4 @@
 ﻿export interface Integer {
-    type: "Integer";
-    value: number;
+  type: "Integer";
+  value: number;
 }

@@ -1,3 +1,3 @@
 ﻿export interface ContinueStatement {
-    type: "ContinueStatement";
+  type: "ContinueStatement";
 }

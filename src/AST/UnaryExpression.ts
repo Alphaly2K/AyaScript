@@ -1,7 +1,7 @@
-﻿import {ASTNode} from "./ASTNode";
+﻿import { ASTNode } from "./ASTNode";
 
 export interface UnaryExpression {
-    type: "UnaryExpression";
-    operator: string;
-    operand: ASTNode;
+  type: "UnaryExpression";
+  operator: string;
+  operand: ASTNode;
 }

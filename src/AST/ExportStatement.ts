@@ -1,6 +1,6 @@
-﻿import {ASTNode} from "./ASTNode";
+﻿import { ASTNode } from "./ASTNode";
 
 export interface ExportStatement {
-    type: "ExportStatement";
-    body: ASTNode;
+  type: "ExportStatement";
+  body: ASTNode;
 }

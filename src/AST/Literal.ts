@@ -1,4 +1,4 @@
 ﻿export interface Literal {
-    type: "Literal";
-    value: string | number;
+  type: "Literal";
+  value: string | number;
 }

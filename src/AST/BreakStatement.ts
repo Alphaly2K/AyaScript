@@ -1,3 +1,3 @@
 ﻿export interface BreakStatement {
-    type: "BreakStatement";
+  type: "BreakStatement";
 }

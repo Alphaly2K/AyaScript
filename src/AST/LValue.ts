@@ -1,20 +1,17 @@
-﻿import {ASTNode} from "./ASTNode";
+﻿import { ASTNode } from "./ASTNode";
 
-export type LValue =
-    | SimpleLValue
-    | FieldAccessLValue
-    | ArrayAccessLValue;
+export type LValue = SimpleLValue | FieldAccessLValue | ArrayAccessLValue;
 export interface SimpleLValue {
-    type: "SimpleLValue";
-    name: string;
+  type: "SimpleLValue";
+  name: string;
 }
 export interface FieldAccessLValue {
-    type: "FieldAccessLValue";
-    object: LValue;
-    field: string;
+  type: "FieldAccessLValue";
+  object: LValue;
+  field: string;
 }
 export interface ArrayAccessLValue {
-    type: "ArrayAccessLValue";
-    array: LValue;
-    index: ASTNode;
+  type: "ArrayAccessLValue";
+  array: LValue;
+  index: ASTNode;
 }

@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test" : "ts-node src/index.ts"
+    "test": "ts-node src/index.ts"
   },
   "dependencies": {
-    "antlr4ts": "^0.5.0-alpha.4"
+    "antlr4ts": "^0.5.0-alpha.4",
+    "eslint": "^9.19.0"
   },
   "devDependencies": {
     "typescript": "^5.5.3"
