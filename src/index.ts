@@ -14,8 +14,11 @@ func add(a: int, b: int): int
 }
 var a = 2;
 var b: int[5] = [1,2,3,4,5];
+var c = [1,2,3];
+var d = ["a\\\\a\\"a","bbb"];
 a--;
 send(b[3]+b[1]);
+send(d[0]);
 send(add(1,2));
 send(a);
 `;

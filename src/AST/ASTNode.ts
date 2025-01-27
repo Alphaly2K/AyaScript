@@ -19,7 +19,7 @@ import {Literal} from "./Literal";
 import {Type} from "./Type";
 import {ExportStatement} from "./ExportStatement";
 import {ArrayList} from "./ArrayList";
-
+import {String} from "./String";
 
 export type ASTNode =
     | Program
@@ -43,4 +43,5 @@ export type ASTNode =
     | Type
     | ExportStatement
     | ArrayList
+    | String
     ;

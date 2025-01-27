@@ -47,6 +47,7 @@ import {ContinueStatement} from "../AST/ContinueStatement";
 import {Block} from "../AST/Block";
 import {ASTNode} from "../AST/ASTNode";
 import {ArrayList} from "../AST/ArrayList";
+import {String} from "../AST/String";
 
 export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScriptVisitor<any> {
     visitProgram(ctx: any): Program {
@@ -181,7 +182,11 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
     }
 
     visitString(ctx: StringContext): String {
-        return <String>ctx.children?.toString();
+        const value = <string>ctx.children?.toString().replace(/(?<!\\)"/g,"").replace(/(?<!\\)\\/g,"").replace(/\\\\/g,"\\");
+        return {
+            type:"String",
+            value
+        }
     }
 
     visitInteger(ctx: IntegerContext): Integer {
@@ -375,7 +380,6 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
     }
 
     visitDecrement(ctx: DecrementContext): UnaryExpression {
-        console.log(this.visit(ctx.lvalue()));
         return {
             type: "UnaryExpression",
             operator: "--",

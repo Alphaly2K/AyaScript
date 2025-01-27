@@ -41,7 +41,8 @@ export class Interpreter {
                     this.evaluateBlock(node.elseBranch.body);
                 }
                 break;
-
+            case "String":
+                return node.value;
             case "ExportStatement":
                 if (node.body.type === "FunctionDeclaration") {
                     globalFunction.addEntry(this.functionScope.lookup(node.body.name))
