@@ -3,6 +3,9 @@
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
+import { CommonTypeContext } from "./AyaScriptParser";
+import { VoidTypeContext } from "./AyaScriptParser";
+import { ArrayTypeContext } from "./AyaScriptParser";
 import { SimpleLValueContext } from "./AyaScriptParser";
 import { FieldAccessLValueContext } from "./AyaScriptParser";
 import { ArrayAccessLValueContext } from "./AyaScriptParser";
@@ -27,6 +30,8 @@ import { IntegerContext } from "./AyaScriptParser";
 import { StringContext } from "./AyaScriptParser";
 import { IncrementContext } from "./AyaScriptParser";
 import { DecrementContext } from "./AyaScriptParser";
+import { TypeInferenceVarDeclContext } from "./AyaScriptParser";
+import { ExplicitVarDeclContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
 import { StatementContext } from "./AyaScriptParser";
 import { VarDeclContext } from "./AyaScriptParser";
@@ -61,6 +66,30 @@ import { TypeContext } from "./AyaScriptParser";
  * operations with no return type.
  */
 export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
+	/**
+	 * Visit a parse tree produced by the `CommonType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitCommonType?: (ctx: CommonTypeContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `VoidType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitVoidType?: (ctx: VoidTypeContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `ArrayType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitArrayType?: (ctx: ArrayTypeContext) => Result;
+
 	/**
 	 * Visit a parse tree produced by the `SimpleLValue`
 	 * labeled alternative in `AyaScriptParser.lvalue`.
@@ -252,6 +281,22 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitDecrement?: (ctx: DecrementContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `TypeInferenceVarDecl`
+	 * labeled alternative in `AyaScriptParser.varDecl`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitTypeInferenceVarDecl?: (ctx: TypeInferenceVarDeclContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by the `ExplicitVarDecl`
+	 * labeled alternative in `AyaScriptParser.varDecl`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitExplicitVarDecl?: (ctx: ExplicitVarDeclContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `AyaScriptParser.program`.

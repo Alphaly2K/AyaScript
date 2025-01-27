@@ -12,15 +12,15 @@ import {
     LValue,
     Parameter,
     Program,
-    ReturnStatement, SendStatement, UnaryExpression,
+    ReturnStatement, SendStatement, Type, UnaryExpression,
     VariableDeclaration,
     WhileStatement
 } from "./AST";
 import {
-    AdditionContext, ArrayAccessLValueContext,
-    BlockContext, DecrementContext,
+    AdditionContext, ArrayAccessLValueContext, ArrayTypeContext,
+    BlockContext, CommonTypeContext, DecrementContext,
     DivisionContext,
-    EqualContext, ExportStmtContext, FieldAccessLValueContext,
+    EqualContext, ExplicitVarDeclContext, ExportStmtContext, FieldAccessLValueContext,
     FuncCallContext,
     FuncDeclContext,
     GreaterThanContext,
@@ -39,8 +39,8 @@ import {
     ParamListContext,
     SendStmtContext, SimpleLValueContext, StatementContext,
     StringContext,
-    SubtractionContext,
-    VarDeclContext,
+    SubtractionContext, TypeContext, TypeInferenceVarDeclContext,
+    VarDeclContext, VoidTypeContext,
 } from "../ANTLR/AyaScriptParser";
 
 export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScriptVisitor<any> {
@@ -49,12 +49,63 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements AyaScri
         return {type: "Program", body};
     }
 
-    // 构建 VariableDeclaration 节点
-    visitVarDecl(ctx: VarDeclContext): VariableDeclaration {
+    visitExplicitVarDecl(ctx: ExplicitVarDeclContext) : VariableDeclaration {
         const name = ctx.ID().text;
         const expr = ctx.expr()
         const value = expr ? this.visit(expr) : null;
-        return {type: "VariableDeclaration", name, value};
+        const varType = this.visit(ctx.type())
+        return {
+            type:"VariableDeclaration",
+            name,
+            value,
+            varType
+        }
+    }
+
+    visitTypeInferenceVarDecl(ctx: TypeInferenceVarDeclContext): VariableDeclaration {
+        const name = ctx.ID().text;
+        const expr = ctx.expr()
+        const value = expr ? this.visit(expr) : null;
+        const varType = null;
+        return {
+            type:"VariableDeclaration",
+            name,
+            value,
+            varType
+        }
+    }
+
+    visitCommonType(ctx: CommonTypeContext): Type {
+        const name = ctx.ID().text;
+        const isArray = false;
+        return {
+            type:"Type",
+            name,
+            isArray,
+            arraySize: null
+        }
+    }
+
+    visitArrayType(ctx: ArrayTypeContext): Type {
+        const name = ctx.ID().text;
+        const expr = ctx.expr()
+        const value = expr ? this.visit(expr) : null;
+        const isArray = true;
+        return {
+            type:"Type",
+            name,
+            isArray,
+            arraySize: value
+        }
+    }
+
+    visitVoidType(ctx: VoidTypeContext): Type {
+        return {
+            type:"Type",
+            name:"void",
+            isArray: false,
+            arraySize: null
+        }
     }
 
     // 构建 FunctionDeclaration 节点

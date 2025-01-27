@@ -90,8 +90,60 @@ export class Interpreter {
                 return this.callFunction(node);
 
             case "VariableDeclaration":
-                if (node.value) {
-                    this.variableScope.addEntry({type: (typeof this.evaluate(node.value)).toString(), name: node.name, isArray: false, value: this.evaluate(node.value)});
+                if(node.varType!==null){                                                                                            // Explicit Variable Declaration
+                    if (node.value === null){
+                        if(node.varType.isArray){
+                            if (!node.varType.arraySize){
+                                throw new Error("No size set for variable " +node.name + "("+ node.varType.name + "[])");
+                            }
+                            const size = this.evaluate(node.varType.arraySize)
+                            if (typeof size !== "number"){
+                                throw new Error("The variable size must be a number");
+                            }
+                            const address = runtimeMemory.allocate(size)
+                            this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:true, memoryAddress: address});
+                        }else{
+                            this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:false})
+                        }
+                    }else {
+                        if(node.varType.isArray){
+                            let address : number;
+                            let size : number;
+                            const valueArray = <ASTNode[]>node.value
+                            if (!node.varType.arraySize){
+                                size = (valueArray).length;
+                            }else{
+                                const tmp = this.evaluate(node.varType.arraySize)
+                                if (typeof tmp !== "number"){
+                                    throw new Error("The variable size must be a number");
+                                }
+                                size = tmp;
+                            }
+                            address = runtimeMemory.allocate(size)
+                            valueArray.forEach((value, index) => {
+                                runtimeMemory.set(address+index, this.evaluate(value));
+                            })
+                            this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:true, memoryAddress: address});
+                        }else{
+                            this.variableScope.addEntry({type: node.varType.name, name: node.name, isArray:node.varType.isArray, value: this.evaluate(<ASTNode>node.value)});
+                        }
+                    }
+                }else{                                                                                                  // Variable Declaration With Type Inference
+                    if(node.value!==null)
+                    {
+                        if(node.value instanceof Array){
+                            const valueArray = node.value
+                            const size = (valueArray).length;
+                            const address = runtimeMemory.allocate(size)
+                            valueArray.forEach((value, index) => {
+                                runtimeMemory.set(address+index, this.evaluate(value));
+                            })
+                            this.variableScope.addEntry({type: typeof runtimeMemory.get(address), name: node.name, isArray:true, memoryAddress: address});
+                        }else{
+                            this.variableScope.addEntry({type: (typeof this.evaluate(<ASTNode>node.value)).toString(), name: node.name, isArray: false, value: this.evaluate(<ASTNode>node.value)});
+                        }
+                    }
+                    throw new Error("Unrecognized type, no type inference available.")
                 }
                 break;
 

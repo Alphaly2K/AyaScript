@@ -3,6 +3,9 @@
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
+import { CommonTypeContext } from "./AyaScriptParser";
+import { VoidTypeContext } from "./AyaScriptParser";
+import { ArrayTypeContext } from "./AyaScriptParser";
 import { SimpleLValueContext } from "./AyaScriptParser";
 import { FieldAccessLValueContext } from "./AyaScriptParser";
 import { ArrayAccessLValueContext } from "./AyaScriptParser";
@@ -27,6 +30,8 @@ import { IntegerContext } from "./AyaScriptParser";
 import { StringContext } from "./AyaScriptParser";
 import { IncrementContext } from "./AyaScriptParser";
 import { DecrementContext } from "./AyaScriptParser";
+import { TypeInferenceVarDeclContext } from "./AyaScriptParser";
+import { ExplicitVarDeclContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
 import { StatementContext } from "./AyaScriptParser";
 import { VarDeclContext } from "./AyaScriptParser";
@@ -58,6 +63,45 @@ import { TypeContext } from "./AyaScriptParser";
  * `AyaScriptParser`.
  */
 export interface AyaScriptListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by the `CommonType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	enterCommonType?: (ctx: CommonTypeContext) => void;
+	/**
+	 * Exit a parse tree produced by the `CommonType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	exitCommonType?: (ctx: CommonTypeContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `VoidType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	enterVoidType?: (ctx: VoidTypeContext) => void;
+	/**
+	 * Exit a parse tree produced by the `VoidType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	exitVoidType?: (ctx: VoidTypeContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `ArrayType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	enterArrayType?: (ctx: ArrayTypeContext) => void;
+	/**
+	 * Exit a parse tree produced by the `ArrayType`
+	 * labeled alternative in `AyaScriptParser.type`.
+	 * @param ctx the parse tree
+	 */
+	exitArrayType?: (ctx: ArrayTypeContext) => void;
+
 	/**
 	 * Enter a parse tree produced by the `SimpleLValue`
 	 * labeled alternative in `AyaScriptParser.lvalue`.
@@ -369,6 +413,32 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitDecrement?: (ctx: DecrementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `TypeInferenceVarDecl`
+	 * labeled alternative in `AyaScriptParser.varDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterTypeInferenceVarDecl?: (ctx: TypeInferenceVarDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by the `TypeInferenceVarDecl`
+	 * labeled alternative in `AyaScriptParser.varDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitTypeInferenceVarDecl?: (ctx: TypeInferenceVarDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `ExplicitVarDecl`
+	 * labeled alternative in `AyaScriptParser.varDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterExplicitVarDecl?: (ctx: ExplicitVarDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by the `ExplicitVarDecl`
+	 * labeled alternative in `AyaScriptParser.varDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitExplicitVarDecl?: (ctx: ExplicitVarDeclContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `AyaScriptParser.program`.

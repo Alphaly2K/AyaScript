@@ -322,57 +322,51 @@ export class AyaScriptParser extends Parser {
 		this.enterRule(_localctx, 4, AyaScriptParser.RULE_varDecl);
 		let _la: number;
 		try {
-			this.state = 89;
+			this.state = 88;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 4, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 3, this._ctx) ) {
 			case 1:
+				_localctx = new TypeInferenceVarDeclContext(_localctx);
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 72;
 				this.match(AyaScriptParser.VAR);
 				this.state = 73;
 				this.match(AyaScriptParser.ID);
+				this.state = 74;
+				this.match(AyaScriptParser.ASSIGN);
+				this.state = 75;
+				this.expr(0);
 				this.state = 76;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
-				if (_la === AyaScriptParser.ASSIGN) {
-					{
-					this.state = 74;
-					this.match(AyaScriptParser.ASSIGN);
-					this.state = 75;
-					this.expr(0);
-					}
-				}
-
-				this.state = 78;
 				this.match(AyaScriptParser.SEMI);
 				}
 				break;
 
 			case 2:
+				_localctx = new ExplicitVarDeclContext(_localctx);
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 79;
+				this.state = 78;
 				this.match(AyaScriptParser.VAR);
-				this.state = 80;
+				this.state = 79;
 				this.match(AyaScriptParser.ID);
-				this.state = 81;
+				this.state = 80;
 				this.match(AyaScriptParser.COLON);
-				this.state = 82;
+				this.state = 81;
 				this.type();
-				this.state = 85;
+				this.state = 84;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la === AyaScriptParser.ASSIGN) {
 					{
-					this.state = 83;
+					this.state = 82;
 					this.match(AyaScriptParser.ASSIGN);
-					this.state = 84;
+					this.state = 83;
 					this.expr(0);
 					}
 				}
 
-				this.state = 87;
+				this.state = 86;
 				this.match(AyaScriptParser.SEMI);
 				}
 				break;
@@ -400,37 +394,37 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 91;
+			this.state = 90;
 			this.match(AyaScriptParser.FUNC);
-			this.state = 92;
+			this.state = 91;
 			this.match(AyaScriptParser.ID);
-			this.state = 93;
+			this.state = 92;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 95;
+			this.state = 94;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === AyaScriptParser.ID) {
 				{
-				this.state = 94;
+				this.state = 93;
 				this.paramList();
 				}
 			}
 
-			this.state = 97;
+			this.state = 96;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 100;
+			this.state = 99;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === AyaScriptParser.COLON) {
 				{
-				this.state = 98;
+				this.state = 97;
 				this.match(AyaScriptParser.COLON);
-				this.state = 99;
+				this.state = 98;
 				this.type();
 				}
 			}
 
-			this.state = 102;
+			this.state = 101;
 			this.block();
 			}
 		}
@@ -455,13 +449,13 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 104;
+			this.state = 103;
 			this.lvalue(0);
-			this.state = 105;
+			this.state = 104;
 			this.match(AyaScriptParser.ASSIGN);
-			this.state = 106;
+			this.state = 105;
 			this.expr(0);
-			this.state = 107;
+			this.state = 106;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -487,37 +481,37 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 109;
+			this.state = 108;
 			this.match(AyaScriptParser.ID);
-			this.state = 110;
+			this.state = 109;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 119;
+			this.state = 118;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << AyaScriptParser.INT) | (1 << AyaScriptParser.LPAREN) | (1 << AyaScriptParser.ID))) !== 0) || _la === AyaScriptParser.NOT || _la === AyaScriptParser.STRING) {
 				{
-				this.state = 111;
+				this.state = 110;
 				this.expr(0);
-				this.state = 116;
+				this.state = 115;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				while (_la === AyaScriptParser.COMMA) {
 					{
 					{
-					this.state = 112;
+					this.state = 111;
 					this.match(AyaScriptParser.COMMA);
-					this.state = 113;
+					this.state = 112;
 					this.expr(0);
 					}
 					}
-					this.state = 118;
+					this.state = 117;
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 				}
 				}
 			}
 
-			this.state = 121;
+			this.state = 120;
 			this.match(AyaScriptParser.RPAREN);
 			}
 		}
@@ -542,20 +536,20 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 123;
+			this.state = 122;
 			this.match(AyaScriptParser.EXPORT);
-			this.state = 126;
+			this.state = 125;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case AyaScriptParser.ID:
 				{
-				this.state = 124;
+				this.state = 123;
 				this.match(AyaScriptParser.ID);
 				}
 				break;
 			case AyaScriptParser.FUNC:
 				{
-				this.state = 125;
+				this.state = 124;
 				this.funcDecl();
 				}
 				break;
@@ -585,11 +579,11 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 128;
+			this.state = 127;
 			this.match(AyaScriptParser.RETURN);
-			this.state = 129;
+			this.state = 128;
 			this.expr(0);
-			this.state = 130;
+			this.state = 129;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -615,24 +609,24 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 132;
+			this.state = 131;
 			this.match(AyaScriptParser.IF);
-			this.state = 133;
+			this.state = 132;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 134;
+			this.state = 133;
 			this.expr(0);
-			this.state = 135;
+			this.state = 134;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 136;
+			this.state = 135;
 			this.block();
-			this.state = 139;
+			this.state = 138;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === AyaScriptParser.ELSE) {
 				{
-				this.state = 137;
+				this.state = 136;
 				this.match(AyaScriptParser.ELSE);
-				this.state = 138;
+				this.state = 137;
 				this.block();
 				}
 			}
@@ -660,15 +654,15 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 141;
+			this.state = 140;
 			this.match(AyaScriptParser.WHILE);
-			this.state = 142;
+			this.state = 141;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 143;
+			this.state = 142;
 			this.expr(0);
-			this.state = 144;
+			this.state = 143;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 145;
+			this.state = 144;
 			this.block();
 			}
 		}
@@ -693,9 +687,9 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 147;
+			this.state = 146;
 			this.match(AyaScriptParser.BREAK);
-			this.state = 148;
+			this.state = 147;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -720,9 +714,9 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 150;
+			this.state = 149;
 			this.match(AyaScriptParser.CONTINUE);
-			this.state = 151;
+			this.state = 150;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -748,21 +742,21 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 153;
+			this.state = 152;
 			this.param();
-			this.state = 158;
+			this.state = 157;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === AyaScriptParser.COMMA) {
 				{
 				{
-				this.state = 154;
+				this.state = 153;
 				this.match(AyaScriptParser.COMMA);
-				this.state = 155;
+				this.state = 154;
 				this.param();
 				}
 				}
-				this.state = 160;
+				this.state = 159;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -789,15 +783,15 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 161;
+			this.state = 160;
 			this.match(AyaScriptParser.SEND);
-			this.state = 162;
+			this.state = 161;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 163;
+			this.state = 162;
 			this.expr(0);
-			this.state = 164;
+			this.state = 163;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 165;
+			this.state = 164;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -822,15 +816,15 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 167;
+			this.state = 166;
 			this.match(AyaScriptParser.READ);
-			this.state = 168;
+			this.state = 167;
 			this.match(AyaScriptParser.LPAREN);
-			this.state = 169;
+			this.state = 168;
 			this.expr(0);
-			this.state = 170;
+			this.state = 169;
 			this.match(AyaScriptParser.RPAREN);
-			this.state = 171;
+			this.state = 170;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -855,11 +849,11 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 173;
+			this.state = 172;
 			this.match(AyaScriptParser.ID);
-			this.state = 174;
+			this.state = 173;
 			this.match(AyaScriptParser.COLON);
-			this.state = 175;
+			this.state = 174;
 			this.type();
 			}
 		}
@@ -896,18 +890,18 @@ export class AyaScriptParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 194;
+			this.state = 193;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 12, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 11, this._ctx) ) {
 			case 1:
 				{
 				_localctx = new LogicalNotContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
 
-				this.state = 178;
+				this.state = 177;
 				this.match(AyaScriptParser.NOT);
-				this.state = 179;
+				this.state = 178;
 				this.expr(8);
 				}
 				break;
@@ -917,11 +911,11 @@ export class AyaScriptParser extends Parser {
 				_localctx = new ParenthesesContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 180;
+				this.state = 179;
 				this.match(AyaScriptParser.LPAREN);
-				this.state = 181;
+				this.state = 180;
 				this.expr(0);
-				this.state = 182;
+				this.state = 181;
 				this.match(AyaScriptParser.RPAREN);
 				}
 				break;
@@ -931,7 +925,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new VariableContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 184;
+				this.state = 183;
 				this.lvalue(0);
 				}
 				break;
@@ -941,7 +935,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new FunctionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 185;
+				this.state = 184;
 				this.funcCall();
 				}
 				break;
@@ -951,7 +945,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new IntegerContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 186;
+				this.state = 185;
 				this.match(AyaScriptParser.INT);
 				}
 				break;
@@ -961,7 +955,7 @@ export class AyaScriptParser extends Parser {
 				_localctx = new StringContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 187;
+				this.state = 186;
 				this.match(AyaScriptParser.STRING);
 				}
 				break;
@@ -971,9 +965,9 @@ export class AyaScriptParser extends Parser {
 				_localctx = new IncrementContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 188;
+				this.state = 187;
 				this.lvalue(0);
-				this.state = 189;
+				this.state = 188;
 				this.match(AyaScriptParser.INCREAMENT);
 				}
 				break;
@@ -983,17 +977,17 @@ export class AyaScriptParser extends Parser {
 				_localctx = new DecrementContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 191;
+				this.state = 190;
 				this.lvalue(0);
-				this.state = 192;
+				this.state = 191;
 				this.match(AyaScriptParser.DECREAMENT);
 				}
 				break;
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 237;
+			this.state = 236;
 			this._errHandler.sync(this);
-			_alt = this.interpreter.adaptivePredict(this._input, 14, this._ctx);
+			_alt = this.interpreter.adaptivePredict(this._input, 13, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -1001,20 +995,20 @@ export class AyaScriptParser extends Parser {
 					}
 					_prevctx = _localctx;
 					{
-					this.state = 235;
+					this.state = 234;
 					this._errHandler.sync(this);
-					switch ( this.interpreter.adaptivePredict(this._input, 13, this._ctx) ) {
+					switch ( this.interpreter.adaptivePredict(this._input, 12, this._ctx) ) {
 					case 1:
 						{
 						_localctx = new MultiplicationContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 196;
+						this.state = 195;
 						if (!(this.precpred(this._ctx, 21))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 21)");
 						}
-						this.state = 197;
+						this.state = 196;
 						this.match(AyaScriptParser.MULT);
-						this.state = 198;
+						this.state = 197;
 						this.expr(22);
 						}
 						break;
@@ -1023,13 +1017,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new DivisionContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 199;
+						this.state = 198;
 						if (!(this.precpred(this._ctx, 20))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 20)");
 						}
-						this.state = 200;
+						this.state = 199;
 						this.match(AyaScriptParser.DIV);
-						this.state = 201;
+						this.state = 200;
 						this.expr(21);
 						}
 						break;
@@ -1038,13 +1032,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new ModulusContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 202;
+						this.state = 201;
 						if (!(this.precpred(this._ctx, 19))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 19)");
 						}
-						this.state = 203;
+						this.state = 202;
 						this.match(AyaScriptParser.MOD);
-						this.state = 204;
+						this.state = 203;
 						this.expr(20);
 						}
 						break;
@@ -1053,13 +1047,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new AdditionContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 205;
+						this.state = 204;
 						if (!(this.precpred(this._ctx, 18))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 18)");
 						}
-						this.state = 206;
+						this.state = 205;
 						this.match(AyaScriptParser.PLUS);
-						this.state = 207;
+						this.state = 206;
 						this.expr(19);
 						}
 						break;
@@ -1068,13 +1062,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new SubtractionContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 208;
+						this.state = 207;
 						if (!(this.precpred(this._ctx, 17))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 17)");
 						}
-						this.state = 209;
+						this.state = 208;
 						this.match(AyaScriptParser.MINUS);
-						this.state = 210;
+						this.state = 209;
 						this.expr(18);
 						}
 						break;
@@ -1083,13 +1077,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new GreaterThanContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 211;
+						this.state = 210;
 						if (!(this.precpred(this._ctx, 16))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 16)");
 						}
-						this.state = 212;
+						this.state = 211;
 						this.match(AyaScriptParser.GT);
-						this.state = 213;
+						this.state = 212;
 						this.expr(17);
 						}
 						break;
@@ -1098,13 +1092,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LessThanContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 214;
+						this.state = 213;
 						if (!(this.precpred(this._ctx, 15))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 15)");
 						}
-						this.state = 215;
+						this.state = 214;
 						this.match(AyaScriptParser.LT);
-						this.state = 216;
+						this.state = 215;
 						this.expr(16);
 						}
 						break;
@@ -1113,13 +1107,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new GreaterThanOrEqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 217;
+						this.state = 216;
 						if (!(this.precpred(this._ctx, 14))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 14)");
 						}
-						this.state = 218;
+						this.state = 217;
 						this.match(AyaScriptParser.GTE);
-						this.state = 219;
+						this.state = 218;
 						this.expr(15);
 						}
 						break;
@@ -1128,13 +1122,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LessThanOrEqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 220;
+						this.state = 219;
 						if (!(this.precpred(this._ctx, 13))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 13)");
 						}
-						this.state = 221;
+						this.state = 220;
 						this.match(AyaScriptParser.LTE);
-						this.state = 222;
+						this.state = 221;
 						this.expr(14);
 						}
 						break;
@@ -1143,13 +1137,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new EqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 223;
+						this.state = 222;
 						if (!(this.precpred(this._ctx, 12))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 12)");
 						}
-						this.state = 224;
+						this.state = 223;
 						this.match(AyaScriptParser.EQ);
-						this.state = 225;
+						this.state = 224;
 						this.expr(13);
 						}
 						break;
@@ -1158,13 +1152,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new NotEqualContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 226;
+						this.state = 225;
 						if (!(this.precpred(this._ctx, 11))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 11)");
 						}
-						this.state = 227;
+						this.state = 226;
 						this.match(AyaScriptParser.NEQ);
-						this.state = 228;
+						this.state = 227;
 						this.expr(12);
 						}
 						break;
@@ -1173,13 +1167,13 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LogicalAndContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 229;
+						this.state = 228;
 						if (!(this.precpred(this._ctx, 10))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 10)");
 						}
-						this.state = 230;
+						this.state = 229;
 						this.match(AyaScriptParser.AND);
-						this.state = 231;
+						this.state = 230;
 						this.expr(11);
 						}
 						break;
@@ -1188,22 +1182,22 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new LogicalOrContext(new ExprContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_expr);
-						this.state = 232;
+						this.state = 231;
 						if (!(this.precpred(this._ctx, 9))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 9)");
 						}
-						this.state = 233;
+						this.state = 232;
 						this.match(AyaScriptParser.OR);
-						this.state = 234;
+						this.state = 233;
 						this.expr(10);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 239;
+				this.state = 238;
 				this._errHandler.sync(this);
-				_alt = this.interpreter.adaptivePredict(this._input, 14, this._ctx);
+				_alt = this.interpreter.adaptivePredict(this._input, 13, this._ctx);
 			}
 			}
 		}
@@ -1229,23 +1223,23 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 240;
+			this.state = 239;
 			this.match(AyaScriptParser.T__0);
-			this.state = 244;
+			this.state = 243;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while ((((_la) & ~0x1F) === 0 && ((1 << _la) & ((1 << AyaScriptParser.INT) | (1 << AyaScriptParser.LPAREN) | (1 << AyaScriptParser.EXPORT) | (1 << AyaScriptParser.VAR) | (1 << AyaScriptParser.FUNC) | (1 << AyaScriptParser.RETURN) | (1 << AyaScriptParser.IF) | (1 << AyaScriptParser.WHILE) | (1 << AyaScriptParser.BREAK) | (1 << AyaScriptParser.CONTINUE) | (1 << AyaScriptParser.SEND) | (1 << AyaScriptParser.READ) | (1 << AyaScriptParser.ID))) !== 0) || _la === AyaScriptParser.NOT || _la === AyaScriptParser.STRING) {
 				{
 				{
-				this.state = 241;
+				this.state = 240;
 				this.statement();
 				}
 				}
-				this.state = 246;
+				this.state = 245;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
-			this.state = 247;
+			this.state = 246;
 			this.match(AyaScriptParser.T__1);
 			}
 		}
@@ -1269,29 +1263,29 @@ export class AyaScriptParser extends Parser {
 		this.enterRule(_localctx, 36, AyaScriptParser.RULE_structOrUnionSpecifier);
 		let _la: number;
 		try {
-			this.state = 260;
+			this.state = 259;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 17, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 16, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 249;
+				this.state = 248;
 				this.structOrUnion();
-				this.state = 251;
+				this.state = 250;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				if (_la === AyaScriptParser.ID) {
 					{
-					this.state = 250;
+					this.state = 249;
 					this.lvalue(0);
 					}
 				}
 
-				this.state = 253;
+				this.state = 252;
 				this.match(AyaScriptParser.T__0);
-				this.state = 254;
+				this.state = 253;
 				this.structDeclarationList();
-				this.state = 255;
+				this.state = 254;
 				this.match(AyaScriptParser.T__1);
 				}
 				break;
@@ -1299,9 +1293,9 @@ export class AyaScriptParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 257;
+				this.state = 256;
 				this.structOrUnion();
-				this.state = 258;
+				this.state = 257;
 				this.lvalue(0);
 				}
 				break;
@@ -1328,7 +1322,7 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 262;
+			this.state = 261;
 			this.match(AyaScriptParser.T__2);
 			}
 		}
@@ -1354,19 +1348,19 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 264;
+			this.state = 263;
 			this.structItem();
-			this.state = 268;
+			this.state = 267;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === AyaScriptParser.ID) {
 				{
 				{
-				this.state = 265;
+				this.state = 264;
 				this.structItem();
 				}
 				}
-				this.state = 270;
+				this.state = 269;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -1393,13 +1387,13 @@ export class AyaScriptParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 271;
+			this.state = 270;
 			this.lvalue(0);
-			this.state = 272;
+			this.state = 271;
 			this.match(AyaScriptParser.COLON);
-			this.state = 273;
+			this.state = 272;
 			this.type();
-			this.state = 274;
+			this.state = 273;
 			this.match(AyaScriptParser.SEMI);
 			}
 		}
@@ -1441,13 +1435,13 @@ export class AyaScriptParser extends Parser {
 			this._ctx = _localctx;
 			_prevctx = _localctx;
 
-			this.state = 277;
+			this.state = 276;
 			this.match(AyaScriptParser.ID);
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 289;
+			this.state = 288;
 			this._errHandler.sync(this);
-			_alt = this.interpreter.adaptivePredict(this._input, 20, this._ctx);
+			_alt = this.interpreter.adaptivePredict(this._input, 19, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -1455,20 +1449,20 @@ export class AyaScriptParser extends Parser {
 					}
 					_prevctx = _localctx;
 					{
-					this.state = 287;
+					this.state = 286;
 					this._errHandler.sync(this);
-					switch ( this.interpreter.adaptivePredict(this._input, 19, this._ctx) ) {
+					switch ( this.interpreter.adaptivePredict(this._input, 18, this._ctx) ) {
 					case 1:
 						{
 						_localctx = new FieldAccessLValueContext(new LvalueContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_lvalue);
-						this.state = 279;
+						this.state = 278;
 						if (!(this.precpred(this._ctx, 2))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 2)");
 						}
-						this.state = 280;
+						this.state = 279;
 						this.match(AyaScriptParser.DOT);
-						this.state = 281;
+						this.state = 280;
 						this.match(AyaScriptParser.ID);
 						}
 						break;
@@ -1477,24 +1471,24 @@ export class AyaScriptParser extends Parser {
 						{
 						_localctx = new ArrayAccessLValueContext(new LvalueContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, AyaScriptParser.RULE_lvalue);
-						this.state = 282;
+						this.state = 281;
 						if (!(this.precpred(this._ctx, 1))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
 						}
-						this.state = 283;
+						this.state = 282;
 						this.match(AyaScriptParser.LBRACK);
-						this.state = 284;
+						this.state = 283;
 						this.expr(0);
-						this.state = 285;
+						this.state = 284;
 						this.match(AyaScriptParser.RBRACK);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 291;
+				this.state = 290;
 				this._errHandler.sync(this);
-				_alt = this.interpreter.adaptivePredict(this._input, 20, this._ctx);
+				_alt = this.interpreter.adaptivePredict(this._input, 19, this._ctx);
 			}
 			}
 		}
@@ -1517,35 +1511,38 @@ export class AyaScriptParser extends Parser {
 		let _localctx: TypeContext = new TypeContext(this._ctx, this.state);
 		this.enterRule(_localctx, 46, AyaScriptParser.RULE_type);
 		try {
-			this.state = 299;
+			this.state = 298;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 21, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 20, this._ctx) ) {
 			case 1:
+				_localctx = new CommonTypeContext(_localctx);
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 292;
+				this.state = 291;
 				this.match(AyaScriptParser.ID);
 				}
 				break;
 
 			case 2:
+				_localctx = new VoidTypeContext(_localctx);
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 293;
+				this.state = 292;
 				this.match(AyaScriptParser.VOID);
 				}
 				break;
 
 			case 3:
+				_localctx = new ArrayTypeContext(_localctx);
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 294;
+				this.state = 293;
 				this.match(AyaScriptParser.ID);
-				this.state = 295;
+				this.state = 294;
 				this.match(AyaScriptParser.LBRACK);
-				this.state = 296;
+				this.state = 295;
 				this.expr(0);
-				this.state = 297;
+				this.state = 296;
 				this.match(AyaScriptParser.RBRACK);
 				}
 				break;
@@ -1631,7 +1628,7 @@ export class AyaScriptParser extends Parser {
 	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03/\u0130\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03/\u012F\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
@@ -1639,137 +1636,136 @@ export class AyaScriptParser extends Parser {
 		"\x18\t\x18\x04\x19\t\x19\x03\x02\x06\x024\n\x02\r\x02\x0E\x025\x03\x03" +
 		"\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03" +
 		"\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x03\x05\x03I\n\x03" +
-		"\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04O\n\x04\x03\x04\x03\x04\x03\x04" +
-		"\x03\x04\x03\x04\x03\x04\x03\x04\x05\x04X\n\x04\x03\x04\x03\x04\x05\x04" +
-		"\\\n\x04\x03\x05\x03\x05\x03\x05\x03\x05\x05\x05b\n\x05\x03\x05\x03\x05" +
-		"\x03\x05\x05\x05g\n\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\x03\x06" +
-		"\x03\x06\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07u\n\x07\f\x07" +
-		"\x0E\x07x\v\x07\x05\x07z\n\x07\x03\x07\x03\x07\x03\b\x03\b\x03\b\x05\b" +
-		"\x81\n\b\x03\t\x03\t\x03\t\x03\t\x03\n\x03\n\x03\n\x03\n\x03\n\x03\n\x03" +
-		"\n\x05\n\x8E\n\n\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\f\x03\f\x03\f" +
-		"\x03\r\x03\r\x03\r\x03\x0E\x03\x0E\x03\x0E\x07\x0E\x9F\n\x0E\f\x0E\x0E" +
-		"\x0E\xA2\v\x0E\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x10" +
-		"\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x11\x03\x11\x03\x11\x03\x11" +
+		"\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04\x03\x04" +
+		"\x03\x04\x03\x04\x03\x04\x05\x04W\n\x04\x03\x04\x03\x04\x05\x04[\n\x04" +
+		"\x03\x05\x03\x05\x03\x05\x03\x05\x05\x05a\n\x05\x03\x05\x03\x05\x03\x05" +
+		"\x05\x05f\n\x05\x03\x05\x03\x05\x03\x06\x03\x06\x03\x06\x03\x06\x03\x06" +
+		"\x03\x07\x03\x07\x03\x07\x03\x07\x03\x07\x07\x07t\n\x07\f\x07\x0E\x07" +
+		"w\v\x07\x05\x07y\n\x07\x03\x07\x03\x07\x03\b\x03\b\x03\b\x05\b\x80\n\b" +
+		"\x03\t\x03\t\x03\t\x03\t\x03\n\x03\n\x03\n\x03\n\x03\n\x03\n\x03\n\x05" +
+		"\n\x8D\n\n\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03\f\x03\f\x03\f\x03\r" +
+		"\x03\r\x03\r\x03\x0E\x03\x0E\x03\x0E\x07\x0E\x9E\n\x0E\f\x0E\x0E\x0E\xA1" +
+		"\v\x0E\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x0F\x03\x10\x03\x10" +
+		"\x03\x10\x03\x10\x03\x10\x03\x10\x03\x11\x03\x11\x03\x11\x03\x11\x03\x12" +
 		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12" +
-		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x05\x12" +
-		"\xC5\n\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
+		"\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x05\x12\xC4\n" +
 		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
 		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
 		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
-		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x07\x12\xEE\n\x12\f\x12\x0E\x12\xF1" +
-		"\v\x12\x03\x13\x03\x13\x07\x13\xF5\n\x13\f\x13\x0E\x13\xF8\v\x13\x03\x13" +
-		"\x03\x13\x03\x14\x03\x14\x05\x14\xFE\n\x14\x03\x14\x03\x14\x03\x14\x03" +
-		"\x14\x03\x14\x03\x14\x03\x14\x05\x14\u0107\n\x14\x03\x15\x03\x15\x03\x16" +
-		"\x03\x16\x07\x16\u010D\n\x16\f\x16\x0E\x16\u0110\v\x16\x03\x17\x03\x17" +
-		"\x03\x17\x03\x17\x03\x17\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18" +
-		"\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x07\x18\u0122\n\x18\f\x18\x0E" +
-		"\x18\u0125\v\x18\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19" +
-		"\x05\x19\u012E\n\x19\x03\x19\x02\x02\x04\".\x1A\x02\x02\x04\x02\x06\x02" +
-		"\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A" +
-		"\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x02\x02" +
-		"\x02\x02\u014A\x023\x03\x02\x02\x02\x04H\x03\x02\x02\x02\x06[\x03\x02" +
-		"\x02\x02\b]\x03\x02\x02\x02\nj\x03\x02\x02\x02\fo\x03\x02\x02\x02\x0E" +
-		"}\x03\x02\x02\x02\x10\x82\x03\x02\x02\x02\x12\x86\x03\x02\x02\x02\x14" +
-		"\x8F\x03\x02\x02\x02\x16\x95\x03\x02\x02\x02\x18\x98\x03\x02\x02\x02\x1A" +
-		"\x9B\x03\x02\x02\x02\x1C\xA3\x03\x02\x02\x02\x1E\xA9\x03\x02\x02\x02 " +
-		"\xAF\x03\x02\x02\x02\"\xC4\x03\x02\x02\x02$\xF2\x03\x02\x02\x02&\u0106" +
-		"\x03\x02\x02\x02(\u0108\x03\x02\x02\x02*\u010A\x03\x02\x02\x02,\u0111" +
-		"\x03\x02\x02\x02.\u0116\x03\x02\x02\x020\u012D\x03\x02\x02\x0224\x05\x04" +
-		"\x03\x0232\x03\x02\x02\x0245\x03\x02\x02\x0253\x03\x02\x02\x0256\x03\x02" +
-		"\x02\x026\x03\x03\x02\x02\x027I\x05\x06\x04\x028I\x05\b\x05\x029I\x05" +
-		"\n\x06\x02:;\x05\f\x07\x02;<\x07\t\x02\x02<I\x03\x02\x02\x02=I\x05\x0E" +
-		"\b\x02>I\x05\x10\t\x02?I\x05\x12\n\x02@I\x05\x14\v\x02AI\x05\x16\f\x02" +
-		"BI\x05\x18\r\x02CI\x05\x1C\x0F\x02DI\x05\x1E\x10\x02EF\x05\"\x12\x02F" +
-		"G\x07\t\x02\x02GI\x03\x02\x02\x02H7\x03\x02\x02\x02H8\x03\x02\x02\x02" +
-		"H9\x03\x02\x02\x02H:\x03\x02\x02\x02H=\x03\x02\x02\x02H>\x03\x02\x02\x02" +
-		"H?\x03\x02\x02\x02H@\x03\x02\x02\x02HA\x03\x02\x02\x02HB\x03\x02\x02\x02" +
-		"HC\x03\x02\x02\x02HD\x03\x02\x02\x02HE\x03\x02\x02\x02I\x05\x03\x02\x02" +
-		"\x02JK\x07\x11\x02\x02KN\x07\x1D\x02\x02LM\x07\b\x02\x02MO\x05\"\x12\x02" +
-		"NL\x03\x02\x02\x02NO\x03\x02\x02\x02OP\x03\x02\x02\x02P\\\x07\t\x02\x02" +
-		"QR\x07\x11\x02\x02RS\x07\x1D\x02\x02ST\x07\x19\x02\x02TW\x050\x19\x02" +
-		"UV\x07\b\x02\x02VX\x05\"\x12\x02WU\x03\x02\x02\x02WX\x03\x02\x02\x02X" +
-		"Y\x03\x02\x02\x02YZ\x07\t\x02\x02Z\\\x03\x02\x02\x02[J\x03\x02\x02\x02" +
-		"[Q\x03\x02\x02\x02\\\x07\x03\x02\x02\x02]^\x07\x12\x02\x02^_\x07\x1D\x02" +
-		"\x02_a\x07\r\x02\x02`b\x05\x1A\x0E\x02a`\x03\x02\x02\x02ab\x03\x02\x02" +
-		"\x02bc\x03\x02\x02\x02cf\x07\x0E\x02\x02de\x07\x19\x02\x02eg\x050\x19" +
-		"\x02fd\x03\x02\x02\x02fg\x03\x02\x02\x02gh\x03\x02\x02\x02hi\x05$\x13" +
-		"\x02i\t\x03\x02\x02\x02jk\x05.\x18\x02kl\x07\b\x02\x02lm\x05\"\x12\x02" +
-		"mn\x07\t\x02\x02n\v\x03\x02\x02\x02op\x07\x1D\x02\x02py\x07\r\x02\x02" +
-		"qv\x05\"\x12\x02rs\x07\x0F\x02\x02su\x05\"\x12\x02tr\x03\x02\x02\x02u" +
-		"x\x03\x02\x02\x02vt\x03\x02\x02\x02vw\x03\x02\x02\x02wz\x03\x02\x02\x02" +
-		"xv\x03\x02\x02\x02yq\x03\x02\x02\x02yz\x03\x02\x02\x02z{\x03\x02\x02\x02" +
-		"{|\x07\x0E\x02\x02|\r\x03\x02\x02\x02}\x80\x07\x10\x02\x02~\x81\x07\x1D" +
-		"\x02\x02\x7F\x81\x05\b\x05\x02\x80~\x03\x02\x02\x02\x80\x7F\x03\x02\x02" +
-		"\x02\x81\x0F\x03\x02\x02\x02\x82\x83\x07\x13\x02\x02\x83\x84\x05\"\x12" +
-		"\x02\x84\x85\x07\t\x02\x02\x85\x11\x03\x02\x02\x02\x86\x87\x07\x14\x02" +
-		"\x02\x87\x88\x07\r\x02\x02\x88\x89\x05\"\x12\x02\x89\x8A\x07\x0E\x02\x02" +
-		"\x8A\x8D\x05$\x13\x02\x8B\x8C\x07\x15\x02\x02\x8C\x8E\x05$\x13\x02\x8D" +
-		"\x8B\x03\x02\x02\x02\x8D\x8E\x03\x02\x02\x02\x8E\x13\x03\x02\x02\x02\x8F" +
-		"\x90\x07\x16\x02\x02\x90\x91\x07\r\x02\x02\x91\x92\x05\"\x12\x02\x92\x93" +
-		"\x07\x0E\x02\x02\x93\x94\x05$\x13\x02\x94\x15\x03\x02\x02\x02\x95\x96" +
-		"\x07\x17\x02\x02\x96\x97\x07\t\x02\x02\x97\x17\x03\x02\x02\x02\x98\x99" +
-		"\x07\x18\x02\x02\x99\x9A\x07\t\x02\x02\x9A\x19\x03\x02\x02\x02\x9B\xA0" +
-		"\x05 \x11\x02\x9C\x9D\x07\x0F\x02\x02\x9D\x9F\x05 \x11\x02\x9E\x9C\x03" +
-		"\x02\x02\x02\x9F\xA2\x03\x02\x02\x02\xA0\x9E\x03\x02\x02\x02\xA0\xA1\x03" +
-		"\x02\x02\x02\xA1\x1B\x03\x02\x02\x02\xA2\xA0\x03\x02\x02\x02\xA3\xA4\x07" +
-		"\x1B\x02\x02\xA4\xA5\x07\r\x02\x02\xA5\xA6\x05\"\x12\x02\xA6\xA7\x07\x0E" +
-		"\x02\x02\xA7\xA8\x07\t\x02\x02\xA8\x1D\x03\x02\x02\x02\xA9\xAA\x07\x1C" +
-		"\x02\x02\xAA\xAB\x07\r\x02\x02\xAB\xAC\x05\"\x12\x02\xAC\xAD\x07\x0E\x02" +
-		"\x02\xAD\xAE\x07\t\x02\x02\xAE\x1F\x03\x02\x02\x02\xAF\xB0\x07\x1D\x02" +
-		"\x02\xB0\xB1\x07\x19\x02\x02\xB1\xB2\x050\x19\x02\xB2!\x03\x02\x02\x02" +
-		"\xB3\xB4\b\x12\x01\x02\xB4\xB5\x07+\x02\x02\xB5\xC5\x05\"\x12\n\xB6\xB7" +
-		"\x07\r\x02\x02\xB7\xB8\x05\"\x12\x02\xB8\xB9\x07\x0E\x02\x02\xB9\xC5\x03" +
-		"\x02\x02\x02\xBA\xC5\x05.\x18\x02\xBB\xC5\x05\f\x07\x02\xBC\xC5\x07\x07" +
-		"\x02\x02\xBD\xC5\x07.\x02\x02\xBE\xBF\x05.\x18\x02\xBF\xC0\x07,\x02\x02" +
-		"\xC0\xC5\x03\x02\x02\x02\xC1\xC2\x05.\x18\x02\xC2\xC3\x07-\x02\x02\xC3" +
-		"\xC5\x03\x02\x02\x02\xC4\xB3\x03\x02\x02\x02\xC4\xB6\x03\x02\x02\x02\xC4" +
-		"\xBA\x03\x02\x02\x02\xC4\xBB\x03\x02\x02\x02\xC4\xBC\x03\x02\x02\x02\xC4" +
-		"\xBD\x03\x02\x02\x02\xC4\xBE\x03\x02\x02\x02\xC4\xC1\x03\x02\x02\x02\xC5" +
-		"\xEF\x03\x02\x02\x02\xC6\xC7\f\x17\x02\x02\xC7\xC8\x07 \x02\x02\xC8\xEE" +
-		"\x05\"\x12\x18\xC9\xCA\f\x16\x02\x02\xCA\xCB\x07!\x02\x02\xCB\xEE\x05" +
-		"\"\x12\x17\xCC\xCD\f\x15\x02\x02\xCD\xCE\x07\"\x02\x02\xCE\xEE\x05\"\x12" +
-		"\x16\xCF\xD0\f\x14\x02\x02\xD0\xD1\x07\x1E\x02\x02\xD1\xEE\x05\"\x12\x15" +
-		"\xD2\xD3\f\x13\x02\x02\xD3\xD4\x07\x1F\x02\x02\xD4\xEE\x05\"\x12\x14\xD5" +
-		"\xD6\f\x12\x02\x02\xD6\xD7\x07%\x02\x02\xD7\xEE\x05\"\x12\x13\xD8\xD9" +
-		"\f\x11\x02\x02\xD9\xDA\x07&\x02\x02\xDA\xEE\x05\"\x12\x12\xDB\xDC\f\x10" +
-		"\x02\x02\xDC\xDD\x07\'\x02\x02\xDD\xEE\x05\"\x12\x11\xDE\xDF\f\x0F\x02" +
-		"\x02\xDF\xE0\x07(\x02\x02\xE0\xEE\x05\"\x12\x10\xE1\xE2\f\x0E\x02\x02" +
-		"\xE2\xE3\x07#\x02\x02\xE3\xEE\x05\"\x12\x0F\xE4\xE5\f\r\x02\x02\xE5\xE6" +
-		"\x07$\x02\x02\xE6\xEE\x05\"\x12\x0E\xE7\xE8\f\f\x02\x02\xE8\xE9\x07)\x02" +
-		"\x02\xE9\xEE\x05\"\x12\r\xEA\xEB\f\v\x02\x02\xEB\xEC\x07*\x02\x02\xEC" +
-		"\xEE\x05\"\x12\f\xED\xC6\x03\x02\x02\x02\xED\xC9\x03\x02\x02\x02\xED\xCC" +
-		"\x03\x02\x02\x02\xED\xCF\x03\x02\x02\x02\xED\xD2\x03\x02\x02\x02\xED\xD5" +
-		"\x03\x02\x02\x02\xED\xD8\x03\x02\x02\x02\xED\xDB\x03\x02\x02\x02\xED\xDE" +
-		"\x03\x02\x02\x02\xED\xE1\x03\x02\x02\x02\xED\xE4\x03\x02\x02\x02\xED\xE7" +
-		"\x03\x02\x02\x02\xED\xEA\x03\x02\x02\x02\xEE\xF1\x03\x02\x02\x02\xEF\xED" +
-		"\x03\x02\x02\x02\xEF\xF0\x03\x02\x02\x02\xF0#\x03\x02\x02\x02\xF1\xEF" +
-		"\x03\x02\x02\x02\xF2\xF6\x07\x03\x02\x02\xF3\xF5\x05\x04\x03\x02\xF4\xF3" +
-		"\x03\x02\x02\x02\xF5\xF8\x03\x02\x02\x02\xF6\xF4\x03\x02\x02\x02\xF6\xF7" +
-		"\x03\x02\x02\x02\xF7\xF9\x03\x02\x02\x02\xF8\xF6\x03\x02\x02\x02\xF9\xFA" +
-		"\x07\x04\x02\x02\xFA%\x03\x02\x02\x02\xFB\xFD\x05(\x15\x02\xFC\xFE\x05" +
-		".\x18\x02\xFD\xFC\x03\x02\x02\x02\xFD\xFE\x03\x02\x02\x02\xFE\xFF\x03" +
-		"\x02\x02\x02\xFF\u0100\x07\x03\x02\x02\u0100\u0101\x05*\x16\x02\u0101" +
-		"\u0102\x07\x04\x02\x02\u0102\u0107\x03\x02\x02\x02\u0103\u0104\x05(\x15" +
-		"\x02\u0104\u0105\x05.\x18\x02\u0105\u0107\x03\x02\x02\x02\u0106\xFB\x03" +
-		"\x02\x02\x02\u0106\u0103\x03\x02\x02\x02\u0107\'\x03\x02\x02\x02\u0108" +
-		"\u0109\x07\x05\x02\x02\u0109)\x03\x02\x02\x02\u010A\u010E\x05,\x17\x02" +
-		"\u010B\u010D\x05,\x17\x02\u010C\u010B\x03\x02\x02\x02\u010D\u0110\x03" +
-		"\x02\x02\x02\u010E\u010C\x03\x02\x02\x02\u010E\u010F\x03\x02\x02\x02\u010F" +
-		"+\x03\x02\x02\x02\u0110\u010E\x03\x02\x02\x02\u0111\u0112\x05.\x18\x02" +
-		"\u0112\u0113\x07\x19\x02\x02\u0113\u0114\x050\x19\x02\u0114\u0115\x07" +
-		"\t\x02\x02\u0115-\x03\x02\x02\x02\u0116\u0117\b\x18\x01\x02\u0117\u0118" +
-		"\x07\x1D\x02\x02\u0118\u0123\x03\x02\x02\x02\u0119\u011A\f\x04\x02\x02" +
-		"\u011A\u011B\x07\n\x02\x02\u011B\u0122\x07\x1D\x02\x02\u011C\u011D\f\x03" +
-		"\x02\x02\u011D\u011E\x07\v\x02\x02\u011E\u011F\x05\"\x12\x02\u011F\u0120" +
-		"\x07\f\x02\x02\u0120\u0122\x03\x02\x02\x02\u0121\u0119\x03\x02\x02\x02" +
-		"\u0121\u011C\x03\x02\x02\x02\u0122\u0125\x03\x02\x02\x02\u0123\u0121\x03" +
-		"\x02\x02\x02\u0123\u0124\x03\x02\x02\x02\u0124/\x03\x02\x02\x02\u0125" +
-		"\u0123\x03\x02\x02\x02\u0126\u012E\x07\x1D\x02\x02\u0127\u012E\x07\x1A" +
-		"\x02\x02\u0128\u0129\x07\x1D\x02\x02\u0129\u012A\x07\v\x02\x02\u012A\u012B" +
-		"\x05\"\x12\x02\u012B\u012C\x07\f\x02\x02\u012C\u012E\x03\x02\x02\x02\u012D" +
-		"\u0126\x03\x02\x02\x02\u012D\u0127\x03\x02\x02\x02\u012D\u0128\x03\x02" +
-		"\x02\x02\u012E1\x03\x02\x02\x02\x185HNW[afvy\x80\x8D\xA0\xC4\xED\xEF\xF6" +
-		"\xFD\u0106\u010E\u0121\u0123\u012D";
+		"\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x03" +
+		"\x12\x03\x12\x03\x12\x03\x12\x07\x12\xED\n\x12\f\x12\x0E\x12\xF0\v\x12" +
+		"\x03\x13\x03\x13\x07\x13\xF4\n\x13\f\x13\x0E\x13\xF7\v\x13\x03\x13\x03" +
+		"\x13\x03\x14\x03\x14\x05\x14\xFD\n\x14\x03\x14\x03\x14\x03\x14\x03\x14" +
+		"\x03\x14\x03\x14\x03\x14\x05\x14\u0106\n\x14\x03\x15\x03\x15\x03\x16\x03" +
+		"\x16\x07\x16\u010C\n\x16\f\x16\x0E\x16\u010F\v\x16\x03\x17\x03\x17\x03" +
+		"\x17\x03\x17\x03\x17\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03\x18\x03" +
+		"\x18\x03\x18\x03\x18\x03\x18\x03\x18\x07\x18\u0121\n\x18\f\x18\x0E\x18" +
+		"\u0124\v\x18\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x03\x19\x05" +
+		"\x19\u012D\n\x19\x03\x19\x02\x02\x04\".\x1A\x02\x02\x04\x02\x06\x02\b" +
+		"\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02" +
+		"\x1C\x02\x1E\x02 \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x02\x02\x02" +
+		"\x02\u0148\x023\x03\x02\x02\x02\x04H\x03\x02\x02\x02\x06Z\x03\x02\x02" +
+		"\x02\b\\\x03\x02\x02\x02\ni\x03\x02\x02\x02\fn\x03\x02\x02\x02\x0E|\x03" +
+		"\x02\x02\x02\x10\x81\x03\x02\x02\x02\x12\x85\x03\x02\x02\x02\x14\x8E\x03" +
+		"\x02\x02\x02\x16\x94\x03\x02\x02\x02\x18\x97\x03\x02\x02\x02\x1A\x9A\x03" +
+		"\x02\x02\x02\x1C\xA2\x03\x02\x02\x02\x1E\xA8\x03\x02\x02\x02 \xAE\x03" +
+		"\x02\x02\x02\"\xC3\x03\x02\x02\x02$\xF1\x03\x02\x02\x02&\u0105\x03\x02" +
+		"\x02\x02(\u0107\x03\x02\x02\x02*\u0109\x03\x02\x02\x02,\u0110\x03\x02" +
+		"\x02\x02.\u0115\x03\x02\x02\x020\u012C\x03\x02\x02\x0224\x05\x04\x03\x02" +
+		"32\x03\x02\x02\x0245\x03\x02\x02\x0253\x03\x02\x02\x0256\x03\x02\x02\x02" +
+		"6\x03\x03\x02\x02\x027I\x05\x06\x04\x028I\x05\b\x05\x029I\x05\n\x06\x02" +
+		":;\x05\f\x07\x02;<\x07\t\x02\x02<I\x03\x02\x02\x02=I\x05\x0E\b\x02>I\x05" +
+		"\x10\t\x02?I\x05\x12\n\x02@I\x05\x14\v\x02AI\x05\x16\f\x02BI\x05\x18\r" +
+		"\x02CI\x05\x1C\x0F\x02DI\x05\x1E\x10\x02EF\x05\"\x12\x02FG\x07\t\x02\x02" +
+		"GI\x03\x02\x02\x02H7\x03\x02\x02\x02H8\x03\x02\x02\x02H9\x03\x02\x02\x02" +
+		"H:\x03\x02\x02\x02H=\x03\x02\x02\x02H>\x03\x02\x02\x02H?\x03\x02\x02\x02" +
+		"H@\x03\x02\x02\x02HA\x03\x02\x02\x02HB\x03\x02\x02\x02HC\x03\x02\x02\x02" +
+		"HD\x03\x02\x02\x02HE\x03\x02\x02\x02I\x05\x03\x02\x02\x02JK\x07\x11\x02" +
+		"\x02KL\x07\x1D\x02\x02LM\x07\b\x02\x02MN\x05\"\x12\x02NO\x07\t\x02\x02" +
+		"O[\x03\x02\x02\x02PQ\x07\x11\x02\x02QR\x07\x1D\x02\x02RS\x07\x19\x02\x02" +
+		"SV\x050\x19\x02TU\x07\b\x02\x02UW\x05\"\x12\x02VT\x03\x02\x02\x02VW\x03" +
+		"\x02\x02\x02WX\x03\x02\x02\x02XY\x07\t\x02\x02Y[\x03\x02\x02\x02ZJ\x03" +
+		"\x02\x02\x02ZP\x03\x02\x02\x02[\x07\x03\x02\x02\x02\\]\x07\x12\x02\x02" +
+		"]^\x07\x1D\x02\x02^`\x07\r\x02\x02_a\x05\x1A\x0E\x02`_\x03\x02\x02\x02" +
+		"`a\x03\x02\x02\x02ab\x03\x02\x02\x02be\x07\x0E\x02\x02cd\x07\x19\x02\x02" +
+		"df\x050\x19\x02ec\x03\x02\x02\x02ef\x03\x02\x02\x02fg\x03\x02\x02\x02" +
+		"gh\x05$\x13\x02h\t\x03\x02\x02\x02ij\x05.\x18\x02jk\x07\b\x02\x02kl\x05" +
+		"\"\x12\x02lm\x07\t\x02\x02m\v\x03\x02\x02\x02no\x07\x1D\x02\x02ox\x07" +
+		"\r\x02\x02pu\x05\"\x12\x02qr\x07\x0F\x02\x02rt\x05\"\x12\x02sq\x03\x02" +
+		"\x02\x02tw\x03\x02\x02\x02us\x03\x02\x02\x02uv\x03\x02\x02\x02vy\x03\x02" +
+		"\x02\x02wu\x03\x02\x02\x02xp\x03\x02\x02\x02xy\x03\x02\x02\x02yz\x03\x02" +
+		"\x02\x02z{\x07\x0E\x02\x02{\r\x03\x02\x02\x02|\x7F\x07\x10\x02\x02}\x80" +
+		"\x07\x1D\x02\x02~\x80\x05\b\x05\x02\x7F}\x03\x02\x02\x02\x7F~\x03\x02" +
+		"\x02\x02\x80\x0F\x03\x02\x02\x02\x81\x82\x07\x13\x02\x02\x82\x83\x05\"" +
+		"\x12\x02\x83\x84\x07\t\x02\x02\x84\x11\x03\x02\x02\x02\x85\x86\x07\x14" +
+		"\x02\x02\x86\x87\x07\r\x02\x02\x87\x88\x05\"\x12\x02\x88\x89\x07\x0E\x02" +
+		"\x02\x89\x8C\x05$\x13\x02\x8A\x8B\x07\x15\x02\x02\x8B\x8D\x05$\x13\x02" +
+		"\x8C\x8A\x03\x02\x02\x02\x8C\x8D\x03\x02\x02\x02\x8D\x13\x03\x02\x02\x02" +
+		"\x8E\x8F\x07\x16\x02\x02\x8F\x90\x07\r\x02\x02\x90\x91\x05\"\x12\x02\x91" +
+		"\x92\x07\x0E\x02\x02\x92\x93\x05$\x13\x02\x93\x15\x03\x02\x02\x02\x94" +
+		"\x95\x07\x17\x02\x02\x95\x96\x07\t\x02\x02\x96\x17\x03\x02\x02\x02\x97" +
+		"\x98\x07\x18\x02\x02\x98\x99\x07\t\x02\x02\x99\x19\x03\x02\x02\x02\x9A" +
+		"\x9F\x05 \x11\x02\x9B\x9C\x07\x0F\x02\x02\x9C\x9E\x05 \x11\x02\x9D\x9B" +
+		"\x03\x02\x02\x02\x9E\xA1\x03\x02\x02\x02\x9F\x9D\x03\x02\x02\x02\x9F\xA0" +
+		"\x03\x02\x02\x02\xA0\x1B\x03\x02\x02\x02\xA1\x9F\x03\x02\x02\x02\xA2\xA3" +
+		"\x07\x1B\x02\x02\xA3\xA4\x07\r\x02\x02\xA4\xA5\x05\"\x12\x02\xA5\xA6\x07" +
+		"\x0E\x02\x02\xA6\xA7\x07\t\x02\x02\xA7\x1D\x03\x02\x02\x02\xA8\xA9\x07" +
+		"\x1C\x02\x02\xA9\xAA\x07\r\x02\x02\xAA\xAB\x05\"\x12\x02\xAB\xAC\x07\x0E" +
+		"\x02\x02\xAC\xAD\x07\t\x02\x02\xAD\x1F\x03\x02\x02\x02\xAE\xAF\x07\x1D" +
+		"\x02\x02\xAF\xB0\x07\x19\x02\x02\xB0\xB1\x050\x19\x02\xB1!\x03\x02\x02" +
+		"\x02\xB2\xB3\b\x12\x01\x02\xB3\xB4\x07+\x02\x02\xB4\xC4\x05\"\x12\n\xB5" +
+		"\xB6\x07\r\x02\x02\xB6\xB7\x05\"\x12\x02\xB7\xB8\x07\x0E\x02\x02\xB8\xC4" +
+		"\x03\x02\x02\x02\xB9\xC4\x05.\x18\x02\xBA\xC4\x05\f\x07\x02\xBB\xC4\x07" +
+		"\x07\x02\x02\xBC\xC4\x07.\x02\x02\xBD\xBE\x05.\x18\x02\xBE\xBF\x07,\x02" +
+		"\x02\xBF\xC4\x03\x02\x02\x02\xC0\xC1\x05.\x18\x02\xC1\xC2\x07-\x02\x02" +
+		"\xC2\xC4\x03\x02\x02\x02\xC3\xB2\x03\x02\x02\x02\xC3\xB5\x03\x02\x02\x02" +
+		"\xC3\xB9\x03\x02\x02\x02\xC3\xBA\x03\x02\x02\x02\xC3\xBB\x03\x02\x02\x02" +
+		"\xC3\xBC\x03\x02\x02\x02\xC3\xBD\x03\x02\x02\x02\xC3\xC0\x03\x02\x02\x02" +
+		"\xC4\xEE\x03\x02\x02\x02\xC5\xC6\f\x17\x02\x02\xC6\xC7\x07 \x02\x02\xC7" +
+		"\xED\x05\"\x12\x18\xC8\xC9\f\x16\x02\x02\xC9\xCA\x07!\x02\x02\xCA\xED" +
+		"\x05\"\x12\x17\xCB\xCC\f\x15\x02\x02\xCC\xCD\x07\"\x02\x02\xCD\xED\x05" +
+		"\"\x12\x16\xCE\xCF\f\x14\x02\x02\xCF\xD0\x07\x1E\x02\x02\xD0\xED\x05\"" +
+		"\x12\x15\xD1\xD2\f\x13\x02\x02\xD2\xD3\x07\x1F\x02\x02\xD3\xED\x05\"\x12" +
+		"\x14\xD4\xD5\f\x12\x02\x02\xD5\xD6\x07%\x02\x02\xD6\xED\x05\"\x12\x13" +
+		"\xD7\xD8\f\x11\x02\x02\xD8\xD9\x07&\x02\x02\xD9\xED\x05\"\x12\x12\xDA" +
+		"\xDB\f\x10\x02\x02\xDB\xDC\x07\'\x02\x02\xDC\xED\x05\"\x12\x11\xDD\xDE" +
+		"\f\x0F\x02\x02\xDE\xDF\x07(\x02\x02\xDF\xED\x05\"\x12\x10\xE0\xE1\f\x0E" +
+		"\x02\x02\xE1\xE2\x07#\x02\x02\xE2\xED\x05\"\x12\x0F\xE3\xE4\f\r\x02\x02" +
+		"\xE4\xE5\x07$\x02\x02\xE5\xED\x05\"\x12\x0E\xE6\xE7\f\f\x02\x02\xE7\xE8" +
+		"\x07)\x02\x02\xE8\xED\x05\"\x12\r\xE9\xEA\f\v\x02\x02\xEA\xEB\x07*\x02" +
+		"\x02\xEB\xED\x05\"\x12\f\xEC\xC5\x03\x02\x02\x02\xEC\xC8\x03\x02\x02\x02" +
+		"\xEC\xCB\x03\x02\x02\x02\xEC\xCE\x03\x02\x02\x02\xEC\xD1\x03\x02\x02\x02" +
+		"\xEC\xD4\x03\x02\x02\x02\xEC\xD7\x03\x02\x02\x02\xEC\xDA\x03\x02\x02\x02" +
+		"\xEC\xDD\x03\x02\x02\x02\xEC\xE0\x03\x02\x02\x02\xEC\xE3\x03\x02\x02\x02" +
+		"\xEC\xE6\x03\x02\x02\x02\xEC\xE9\x03\x02\x02\x02\xED\xF0\x03\x02\x02\x02" +
+		"\xEE\xEC\x03\x02\x02\x02\xEE\xEF\x03\x02\x02\x02\xEF#\x03\x02\x02\x02" +
+		"\xF0\xEE\x03\x02\x02\x02\xF1\xF5\x07\x03\x02\x02\xF2\xF4\x05\x04\x03\x02" +
+		"\xF3\xF2\x03\x02\x02\x02\xF4\xF7\x03\x02\x02\x02\xF5\xF3\x03\x02\x02\x02" +
+		"\xF5\xF6\x03\x02\x02\x02\xF6\xF8\x03\x02\x02\x02\xF7\xF5\x03\x02\x02\x02" +
+		"\xF8\xF9\x07\x04\x02\x02\xF9%\x03\x02\x02\x02\xFA\xFC\x05(\x15\x02\xFB" +
+		"\xFD\x05.\x18\x02\xFC\xFB\x03\x02\x02\x02\xFC\xFD\x03\x02\x02\x02\xFD" +
+		"\xFE\x03\x02\x02\x02\xFE\xFF\x07\x03\x02\x02\xFF\u0100\x05*\x16\x02\u0100" +
+		"\u0101\x07\x04\x02\x02\u0101\u0106\x03\x02\x02\x02\u0102\u0103\x05(\x15" +
+		"\x02\u0103\u0104\x05.\x18\x02\u0104\u0106\x03\x02\x02\x02\u0105\xFA\x03" +
+		"\x02\x02\x02\u0105\u0102\x03\x02\x02\x02\u0106\'\x03\x02\x02\x02\u0107" +
+		"\u0108\x07\x05\x02\x02\u0108)\x03\x02\x02\x02\u0109\u010D\x05,\x17\x02" +
+		"\u010A\u010C\x05,\x17\x02\u010B\u010A\x03\x02\x02\x02\u010C\u010F\x03" +
+		"\x02\x02\x02\u010D\u010B\x03\x02\x02\x02\u010D\u010E\x03\x02\x02\x02\u010E" +
+		"+\x03\x02\x02\x02\u010F\u010D\x03\x02\x02\x02\u0110\u0111\x05.\x18\x02" +
+		"\u0111\u0112\x07\x19\x02\x02\u0112\u0113\x050\x19\x02\u0113\u0114\x07" +
+		"\t\x02\x02\u0114-\x03\x02\x02\x02\u0115\u0116\b\x18\x01\x02\u0116\u0117" +
+		"\x07\x1D\x02\x02\u0117\u0122\x03\x02\x02\x02\u0118\u0119\f\x04\x02\x02" +
+		"\u0119\u011A\x07\n\x02\x02\u011A\u0121\x07\x1D\x02\x02\u011B\u011C\f\x03" +
+		"\x02\x02\u011C\u011D\x07\v\x02\x02\u011D\u011E\x05\"\x12\x02\u011E\u011F" +
+		"\x07\f\x02\x02\u011F\u0121\x03\x02\x02\x02\u0120\u0118\x03\x02\x02\x02" +
+		"\u0120\u011B\x03\x02\x02\x02\u0121\u0124\x03\x02\x02\x02\u0122\u0120\x03" +
+		"\x02\x02\x02\u0122\u0123\x03\x02\x02\x02\u0123/\x03\x02\x02\x02\u0124" +
+		"\u0122\x03\x02\x02\x02\u0125\u012D\x07\x1D\x02\x02\u0126\u012D\x07\x1A" +
+		"\x02\x02\u0127\u0128\x07\x1D\x02\x02\u0128\u0129\x07\v\x02\x02\u0129\u012A" +
+		"\x05\"\x12\x02\u012A\u012B\x07\f\x02\x02\u012B\u012D\x03\x02\x02\x02\u012C" +
+		"\u0125\x03\x02\x02\x02\u012C\u0126\x03\x02\x02\x02\u012C\u0127\x03\x02" +
+		"\x02\x02\u012D1\x03\x02\x02\x02\x175HVZ`eux\x7F\x8C\x9F\xC3\xEC\xEE\xF5" +
+		"\xFC\u0105\u010D\u0120\u0122\u012C";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!AyaScriptParser.__ATN) {
@@ -1889,38 +1885,80 @@ export class StatementContext extends ParserRuleContext {
 
 
 export class VarDeclContext extends ParserRuleContext {
-	public VAR(): TerminalNode { return this.getToken(AyaScriptParser.VAR, 0); }
-	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
-	public SEMI(): TerminalNode { return this.getToken(AyaScriptParser.SEMI, 0); }
-	public ASSIGN(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.ASSIGN, 0); }
-	public expr(): ExprContext | undefined {
-		return this.tryGetRuleContext(0, ExprContext);
-	}
-	public COLON(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.COLON, 0); }
-	public type(): TypeContext | undefined {
-		return this.tryGetRuleContext(0, TypeContext);
-	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
 	// @Override
 	public get ruleIndex(): number { return AyaScriptParser.RULE_varDecl; }
+	public copyFrom(ctx: VarDeclContext): void {
+		super.copyFrom(ctx);
+	}
+}
+export class TypeInferenceVarDeclContext extends VarDeclContext {
+	public VAR(): TerminalNode { return this.getToken(AyaScriptParser.VAR, 0); }
+	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public ASSIGN(): TerminalNode { return this.getToken(AyaScriptParser.ASSIGN, 0); }
+	public expr(): ExprContext {
+		return this.getRuleContext(0, ExprContext);
+	}
+	public SEMI(): TerminalNode { return this.getToken(AyaScriptParser.SEMI, 0); }
+	constructor(ctx: VarDeclContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
 	// @Override
 	public enterRule(listener: AyaScriptListener): void {
-		if (listener.enterVarDecl) {
-			listener.enterVarDecl(this);
+		if (listener.enterTypeInferenceVarDecl) {
+			listener.enterTypeInferenceVarDecl(this);
 		}
 	}
 	// @Override
 	public exitRule(listener: AyaScriptListener): void {
-		if (listener.exitVarDecl) {
-			listener.exitVarDecl(this);
+		if (listener.exitTypeInferenceVarDecl) {
+			listener.exitTypeInferenceVarDecl(this);
 		}
 	}
 	// @Override
 	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
-		if (visitor.visitVarDecl) {
-			return visitor.visitVarDecl(this);
+		if (visitor.visitTypeInferenceVarDecl) {
+			return visitor.visitTypeInferenceVarDecl(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class ExplicitVarDeclContext extends VarDeclContext {
+	public VAR(): TerminalNode { return this.getToken(AyaScriptParser.VAR, 0); }
+	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public COLON(): TerminalNode { return this.getToken(AyaScriptParser.COLON, 0); }
+	public type(): TypeContext {
+		return this.getRuleContext(0, TypeContext);
+	}
+	public SEMI(): TerminalNode { return this.getToken(AyaScriptParser.SEMI, 0); }
+	public ASSIGN(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.ASSIGN, 0); }
+	public expr(): ExprContext | undefined {
+		return this.tryGetRuleContext(0, ExprContext);
+	}
+	constructor(ctx: VarDeclContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterExplicitVarDecl) {
+			listener.enterExplicitVarDecl(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitExplicitVarDecl) {
+			listener.exitExplicitVarDecl(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitExplicitVarDecl) {
+			return visitor.visitExplicitVarDecl(this);
 		} else {
 			return visitor.visitChildren(this);
 		}
@@ -3422,34 +3460,96 @@ export class ArrayAccessLValueContext extends LvalueContext {
 
 
 export class TypeContext extends ParserRuleContext {
-	public ID(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.ID, 0); }
-	public VOID(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.VOID, 0); }
-	public LBRACK(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.LBRACK, 0); }
-	public expr(): ExprContext | undefined {
-		return this.tryGetRuleContext(0, ExprContext);
-	}
-	public RBRACK(): TerminalNode | undefined { return this.tryGetToken(AyaScriptParser.RBRACK, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
 	// @Override
 	public get ruleIndex(): number { return AyaScriptParser.RULE_type; }
+	public copyFrom(ctx: TypeContext): void {
+		super.copyFrom(ctx);
+	}
+}
+export class CommonTypeContext extends TypeContext {
+	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	constructor(ctx: TypeContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
 	// @Override
 	public enterRule(listener: AyaScriptListener): void {
-		if (listener.enterType) {
-			listener.enterType(this);
+		if (listener.enterCommonType) {
+			listener.enterCommonType(this);
 		}
 	}
 	// @Override
 	public exitRule(listener: AyaScriptListener): void {
-		if (listener.exitType) {
-			listener.exitType(this);
+		if (listener.exitCommonType) {
+			listener.exitCommonType(this);
 		}
 	}
 	// @Override
 	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
-		if (visitor.visitType) {
-			return visitor.visitType(this);
+		if (visitor.visitCommonType) {
+			return visitor.visitCommonType(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class VoidTypeContext extends TypeContext {
+	public VOID(): TerminalNode { return this.getToken(AyaScriptParser.VOID, 0); }
+	constructor(ctx: TypeContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterVoidType) {
+			listener.enterVoidType(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitVoidType) {
+			listener.exitVoidType(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitVoidType) {
+			return visitor.visitVoidType(this);
+		} else {
+			return visitor.visitChildren(this);
+		}
+	}
+}
+export class ArrayTypeContext extends TypeContext {
+	public ID(): TerminalNode { return this.getToken(AyaScriptParser.ID, 0); }
+	public LBRACK(): TerminalNode { return this.getToken(AyaScriptParser.LBRACK, 0); }
+	public expr(): ExprContext {
+		return this.getRuleContext(0, ExprContext);
+	}
+	public RBRACK(): TerminalNode { return this.getToken(AyaScriptParser.RBRACK, 0); }
+	constructor(ctx: TypeContext) {
+		super(ctx.parent, ctx.invokingState);
+		this.copyFrom(ctx);
+	}
+	// @Override
+	public enterRule(listener: AyaScriptListener): void {
+		if (listener.enterArrayType) {
+			listener.enterArrayType(this);
+		}
+	}
+	// @Override
+	public exitRule(listener: AyaScriptListener): void {
+		if (listener.exitArrayType) {
+			listener.exitArrayType(this);
+		}
+	}
+	// @Override
+	public accept<Result>(visitor: AyaScriptVisitor<Result>): Result {
+		if (visitor.visitArrayType) {
+			return visitor.visitArrayType(this);
 		} else {
 			return visitor.visitChildren(this);
 		}

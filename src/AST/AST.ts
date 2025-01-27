@@ -17,12 +17,20 @@
     | Parameter
     | Integer
     | Literal
+    | Type
     | ExportStatement
     ;
 
 export interface Program {
     type: "Program";
     body: ASTNode[]; // 所有语句组成的程序主体
+}
+
+export interface Type{
+    type: "Type";
+    name: string;
+    isArray: boolean;
+    arraySize: ASTNode | null;
 }
 
 export interface ExportStatement {
@@ -69,7 +77,8 @@ export interface SendStatement {
 export interface VariableDeclaration {
     type: "VariableDeclaration";
     name: string; // 变量名
-    value: ASTNode | null; // 可选的初始值
+    value: ASTNode | ASTNode[] | null; // 可选的初始值
+    varType: Type | null;
 }
 
 export interface BinaryExpression {
