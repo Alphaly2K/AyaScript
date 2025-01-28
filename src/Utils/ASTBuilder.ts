@@ -31,7 +31,6 @@ import {
   NotEqualContext,
   ParamContext,
   ParamListContext,
-  SendStmtContext,
   SimpleLValueContext,
   StatementContext,
   StringContext,
@@ -48,7 +47,6 @@ import { FunctionDeclaration } from "../AST/FunctionDeclaration";
 import { Parameter } from "../AST/Parameter";
 import { Assignment } from "../AST/Assignment";
 import { FunctionCall } from "../AST/FunctionCall";
-import { SendStatement } from "../AST/SendStatement";
 import { Integer } from "../AST/Integer";
 import { BinaryExpression } from "../AST/BinaryExpression";
 import { IfStatement } from "../AST/IfStatement";
@@ -194,14 +192,6 @@ export class ASTBuilder
     const name = ctx.ID().text;
     const args = ctx.expr().map((arg: any) => this.visit(arg));
     return { type: "FunctionCall", name, arguments: args };
-  }
-
-  visitSendStmt(ctx: SendStmtContext): SendStatement {
-    const value = this.visit(ctx.expr());
-    return {
-      type: "SendStatement",
-      body: value,
-    };
   }
 
   visitString(ctx: StringContext): String {

@@ -4,7 +4,7 @@ import { AyaScriptParser } from "./ANTLR/AyaScriptParser";
 import { ASTBuilder } from "./Utils/ASTBuilder";
 import { Interpreter } from "./Interpreter/Interpreter";
 
-export function REPL(input: string): string[] {
+export function REPL(input: string) {
   const lexer = new AyaScriptLexer(CharStreams.fromString(input));
   const tokenStream = new CommonTokenStream(lexer);
   const parser = new AyaScriptParser(tokenStream);
@@ -14,5 +14,5 @@ export function REPL(input: string): string[] {
   const ast = astBuilder.visitProgram(parseTree);
 
   const interpreter = new Interpreter();
-  return interpreter.execute(ast);
+  interpreter.execute(ast);
 }

@@ -8,7 +8,6 @@ import { WhileStatement } from "./WhileStatement";
 import { ReturnStatement } from "./ReturnStatement";
 import { BreakStatement } from "./BreakStatement";
 import { ContinueStatement } from "./ContinueStatement";
-import { SendStatement } from "./SendStatement";
 import { Block } from "./Block";
 import { BinaryExpression } from "./BinaryExpression";
 import { UnaryExpression } from "./UnaryExpression";
@@ -32,7 +31,6 @@ export type ASTNode =
   | ReturnStatement
   | BreakStatement
   | ContinueStatement
-  | SendStatement
   | Block
   | BinaryExpression
   | UnaryExpression

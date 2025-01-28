@@ -3,9 +3,9 @@ import { REPL } from "./REPL";
 const code = `
 func add(a: int, b: int): int
 {
-     send(a+b);
+     send(a);
      while(0==0){
-        send(a+b);
+        send(a);
         if(a==a){
         break;
         }
@@ -22,4 +22,4 @@ send(d[0]);
 send(add(1,2));
 send(a);
 `;
-console.log(REPL(code));
+REPL(code)

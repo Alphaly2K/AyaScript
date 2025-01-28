@@ -8,28 +8,25 @@ import {
 } from "./SymbolTable";
 import { Program } from "../AST/Program";
 import { ASTNode } from "../AST/ASTNode";
-import { SendStatement } from "../AST/SendStatement";
 import { SimpleLValue } from "../AST/LValue";
 import { FunctionCall } from "../AST/FunctionCall";
 import { Parameter } from "../AST/Parameter";
+import {FuncProcessor} from "./Std";
 
 let globalFunction: FunctionSymbolTable = new FunctionSymbolTable();
 let globalVariable: VariableSymbolTable = new VariableSymbolTable();
 let runtimeMemory: RuntimeMemory = new RuntimeMemory();
-
+let exStdLib : FuncProcessor = new FuncProcessor();
 export class Interpreter {
   private functionScope: FunctionSymbolTable = new FunctionSymbolTable();
   private variableScope: VariableSymbolTable = new VariableSymbolTable();
   private loopStack: Array<"LOOP" | "BREAK" | "CONTINUE"> = [];
   private returnValue: any = null;
-  private output: string[] = [];
 
-  execute(ast: Program): string[] {
-    this.output = [];
+  execute(ast: Program) {
     for (const node of ast.body) {
       this.evaluate(node);
     }
-    return this.output;
   }
 
   evaluate(node: ASTNode): any {
@@ -54,9 +51,6 @@ export class Interpreter {
         }
         break;
 
-      case "SendStatement":
-        this.send(node);
-        break;
 
       case "WhileStatement":
         this.loopStack.push("LOOP");
@@ -306,10 +300,6 @@ export class Interpreter {
     }
   }
 
-  send(node: SendStatement): any {
-    this.output.push(this.evaluate(node.body));
-  }
-
   resolveLValue(node: SimpleLValue): VariableSymbolTableEntry {
     if (this.variableScope.hasEntry(node.name)) {
       return this.variableScope.lookup(node.name);
@@ -321,6 +311,15 @@ export class Interpreter {
   }
 
   callFunction(node: FunctionCall): any {
+    if(exStdLib.has(node.name))
+    {
+      let args: any[] = [];
+      node.arguments.forEach((arg: ASTNode) => {
+        args.push(this.evaluate(arg));
+      })
+      exStdLib.execute(node.name,args);
+      return;
+    }
     const func = this.functionScope.hasEntry(node.name)
       ? this.functionScope.lookup(node.name)
       : globalFunction.lookup(node.name);
