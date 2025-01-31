@@ -1,0 +1,5 @@
+﻿// Authored by Alphaly at 1/28/2025 20:30:00 UTC+8
+// std.IO.stdio
+export func sendln(value: string){
+    send(value + "\n");
+}

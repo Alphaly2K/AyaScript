@@ -31,6 +31,7 @@ import { StringContext } from "./AyaScriptParser";
 import { IncrementContext } from "./AyaScriptParser";
 import { DecrementContext } from "./AyaScriptParser";
 import { ArrayListContext } from "./AyaScriptParser";
+import { NewObjectExprContext } from "./AyaScriptParser";
 import { TypeInferenceVarDeclContext } from "./AyaScriptParser";
 import { ExplicitVarDeclContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
@@ -49,13 +50,13 @@ import { ParamListContext } from "./AyaScriptParser";
 import { ParamContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
-import { StructOrUnionSpecifierContext } from "./AyaScriptParser";
 import { ArrListContext } from "./AyaScriptParser";
-import { StructOrUnionContext } from "./AyaScriptParser";
-import { StructDeclarationListContext } from "./AyaScriptParser";
-import { StructItemContext } from "./AyaScriptParser";
 import { LvalueContext } from "./AyaScriptParser";
 import { TypeContext } from "./AyaScriptParser";
+import { MethodDeclContext } from "./AyaScriptParser";
+import { ClassDeclarationContext } from "./AyaScriptParser";
+import { ClassBodyContext } from "./AyaScriptParser";
+import { ObjectCreationExprContext } from "./AyaScriptParser";
 
 
 /**
@@ -428,6 +429,19 @@ export interface AyaScriptListener extends ParseTreeListener {
 	exitArrayList?: (ctx: ArrayListContext) => void;
 
 	/**
+	 * Enter a parse tree produced by the `NewObjectExpr`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	enterNewObjectExpr?: (ctx: NewObjectExprContext) => void;
+	/**
+	 * Exit a parse tree produced by the `NewObjectExpr`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 */
+	exitNewObjectExpr?: (ctx: NewObjectExprContext) => void;
+
+	/**
 	 * Enter a parse tree produced by the `TypeInferenceVarDecl`
 	 * labeled alternative in `AyaScriptParser.varDecl`.
 	 * @param ctx the parse tree
@@ -630,17 +644,6 @@ export interface AyaScriptListener extends ParseTreeListener {
 	exitBlock?: (ctx: BlockContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `AyaScriptParser.structOrUnionSpecifier`.
-	 * @param ctx the parse tree
-	 */
-	enterStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.structOrUnionSpecifier`.
-	 * @param ctx the parse tree
-	 */
-	exitStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => void;
-
-	/**
 	 * Enter a parse tree produced by `AyaScriptParser.arrList`.
 	 * @param ctx the parse tree
 	 */
@@ -650,39 +653,6 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitArrList?: (ctx: ArrListContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `AyaScriptParser.structOrUnion`.
-	 * @param ctx the parse tree
-	 */
-	enterStructOrUnion?: (ctx: StructOrUnionContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.structOrUnion`.
-	 * @param ctx the parse tree
-	 */
-	exitStructOrUnion?: (ctx: StructOrUnionContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `AyaScriptParser.structDeclarationList`.
-	 * @param ctx the parse tree
-	 */
-	enterStructDeclarationList?: (ctx: StructDeclarationListContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.structDeclarationList`.
-	 * @param ctx the parse tree
-	 */
-	exitStructDeclarationList?: (ctx: StructDeclarationListContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `AyaScriptParser.structItem`.
-	 * @param ctx the parse tree
-	 */
-	enterStructItem?: (ctx: StructItemContext) => void;
-	/**
-	 * Exit a parse tree produced by `AyaScriptParser.structItem`.
-	 * @param ctx the parse tree
-	 */
-	exitStructItem?: (ctx: StructItemContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `AyaScriptParser.lvalue`.
@@ -705,5 +675,49 @@ export interface AyaScriptListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitType?: (ctx: TypeContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.methodDecl`.
+	 * @param ctx the parse tree
+	 */
+	enterMethodDecl?: (ctx: MethodDeclContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.methodDecl`.
+	 * @param ctx the parse tree
+	 */
+	exitMethodDecl?: (ctx: MethodDeclContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.classDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	enterClassDeclaration?: (ctx: ClassDeclarationContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.classDeclaration`.
+	 * @param ctx the parse tree
+	 */
+	exitClassDeclaration?: (ctx: ClassDeclarationContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.classBody`.
+	 * @param ctx the parse tree
+	 */
+	enterClassBody?: (ctx: ClassBodyContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.classBody`.
+	 * @param ctx the parse tree
+	 */
+	exitClassBody?: (ctx: ClassBodyContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `AyaScriptParser.objectCreationExpr`.
+	 * @param ctx the parse tree
+	 */
+	enterObjectCreationExpr?: (ctx: ObjectCreationExprContext) => void;
+	/**
+	 * Exit a parse tree produced by `AyaScriptParser.objectCreationExpr`.
+	 * @param ctx the parse tree
+	 */
+	exitObjectCreationExpr?: (ctx: ObjectCreationExprContext) => void;
 }
 

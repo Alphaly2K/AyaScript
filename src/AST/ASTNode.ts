@@ -19,6 +19,9 @@ import { Type } from "./Type";
 import { ExportStatement } from "./ExportStatement";
 import { ArrayList } from "./ArrayList";
 import { String } from "./String";
+import {ClassDeclaration} from "./ClassDeclaration";
+import {ClassBody} from "./ClassBody";
+import {ObjectCreationExpression} from "./ObjectCreationExpression";
 
 export type ASTNode =
   | Program
@@ -41,4 +44,7 @@ export type ASTNode =
   | Type
   | ExportStatement
   | ArrayList
+  | ClassDeclaration
+    | ClassBody
+    | ObjectCreationExpression
   | String;
