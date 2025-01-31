@@ -4,10 +4,12 @@ import {ASTNode} from "../AST/ASTNode";
 export class Ayac
 {
     private codeGen;
+    private ast: ASTNode;
     constructor(ast:ASTNode) {
-        this.codeGen=new CodeGenerator(ast);
+        this.codeGen=new CodeGenerator();
+        this.ast=ast;
     }
     genCode(){
-        return this.codeGen.generate();
+        return this.codeGen.generate(this.ast);
     }
 }

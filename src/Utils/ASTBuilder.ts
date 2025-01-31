@@ -5,7 +5,7 @@ import {
   ArrayAccessLValueContext,
   ArrayListContext,
   ArrayTypeContext,
-  BlockContext,
+  BlockContext, ClassBodyContext, ClassDeclarationContext,
   CommonTypeContext,
   DecrementContext,
   DivisionContext,
@@ -25,10 +25,10 @@ import {
   LogicalAndContext,
   LogicalNotContext,
   LogicalOrContext,
-  LvalueContext,
+  LvalueContext, MethodDeclContext,
   ModulusContext,
   MultiplicationContext,
-  NotEqualContext,
+  NotEqualContext, ObjectCreationExprContext,
   ParamContext,
   ParamListContext,
   SimpleLValueContext,
@@ -61,6 +61,10 @@ import { Block } from "../AST/Block";
 import { ASTNode } from "../AST/ASTNode";
 import { ArrayList } from "../AST/ArrayList";
 import { String } from "../AST/String";
+import {ClassDeclaration} from "../AST/ClassDeclaration";
+import {ClassBody} from "../AST/ClassBody";
+import {MethodDeclaration} from "../AST/MethodDeclaration";
+import {ObjectCreationExpression} from "../AST/ObjectCreationExpression";
 
 export class ASTBuilder
   extends AbstractParseTreeVisitor<any>
@@ -76,11 +80,17 @@ export class ASTBuilder
     const expr = ctx.expr();
     const value = expr ? this.visit(expr) : null;
     const varType = this.visit(ctx.type());
+    const isPublic = (ctx.PUBLIC()===undefined&&ctx.PRIVATE()===undefined)?true:(ctx.PUBLIC() !== undefined);
+    const isFinal = ctx.FINAL()!==undefined;
+    const isStatic = ctx.STATIC()!==undefined;
     return {
       type: "VariableDeclaration",
       name,
       value,
       varType,
+      isPublic,
+      isFinal,
+      isStatic,
     };
   }
 
@@ -91,11 +101,17 @@ export class ASTBuilder
     const expr = ctx.expr();
     const value = expr ? this.visit(expr) : null;
     const varType = null;
+    const isPublic = (ctx.PUBLIC()===undefined&&ctx.PRIVATE()===undefined)?true:(ctx.PUBLIC() !== undefined);
+    const isFinal = ctx.FINAL()!==undefined;
+    const isStatic = ctx.STATIC()!==undefined;
     return {
       type: "VariableDeclaration",
       name,
       value,
       varType,
+      isPublic,
+      isFinal,
+      isStatic,
     };
   }
 
@@ -106,7 +122,6 @@ export class ASTBuilder
       type: "Type",
       name,
       isArray,
-      arraySize: null,
     };
   }
 
@@ -128,7 +143,6 @@ export class ASTBuilder
       type: "Type",
       name: "void",
       isArray: false,
-      arraySize: null,
     };
   }
 
@@ -146,15 +160,14 @@ export class ASTBuilder
     };
   }
 
-  // 构建 FunctionDeclaration 节点
   visitFuncDecl(ctx: FuncDeclContext): FunctionDeclaration {
-    const name = ctx.ID().text; // 获取函数名称
+    const name = ctx.ID().text;
     const paramList = ctx.paramList();
     const params = paramList
-      ? paramList.param().map((p: any) => this.visit(p)) // 处理参数列表
+      ? paramList.param().map((p: any) => this.visit(p))
       : [];
     const type = ctx.type();
-    const returnType = type ? type.text : "void";
+    const returnType = type ? this.visit(type) : { type:"Type", name: "void", isArray:false };
     const body = this.visit(ctx.block());
 
     return {
@@ -464,6 +477,101 @@ export class ASTBuilder
   visitBlock(ctx: BlockContext): Block {
     const body = ctx.statement().map((stmt: any) => this.visit(stmt));
     return { type: "Block", body };
+  }
+
+  visitClassBody(ctx: ClassBodyContext): ClassBody {
+    let varList: VariableDeclaration[] =[]
+    ctx.varDecl().forEach((decl: any) => {
+      varList.push(this.visit(decl))
+    });
+    let methodList: MethodDeclaration[] =[]
+    ctx.methodDecl().forEach((method: any) => {
+      methodList.push(this.visit(method))
+    })
+    return {
+      type:"ClassBody",
+      properties: varList,
+      methods: methodList,
+    }
+  }
+
+  visitMethodDecl(ctx: MethodDeclContext): MethodDeclaration {
+    const isPublic = (ctx.PUBLIC()===undefined&&ctx.PRIVATE()===undefined)?true:(ctx.PUBLIC() !== undefined);
+    const isFinal = ctx.FINAL()!==undefined;
+    const isStatic = ctx.STATIC()!==undefined;
+    const name = ctx.ID().text;
+    const body = this.visitBlock(ctx.block());
+    const tmp = ctx.type();
+    const returnType = tmp?this.visit(tmp): { type:"Type", name: "void", isArray:false };
+    const paramList = ctx.paramList()
+    const params = paramList
+        ? paramList.param().map((p: any) => this.visit(p))
+        : [];
+    return {
+      type:"MethodDeclaration",
+      name,
+      isFinal,
+      isStatic,
+      isPublic,
+      body,
+      returnType,
+      params,
+    }
+  }
+
+  visitClassDeclaration(ctx: ClassDeclarationContext): ClassDeclaration {
+    const body =this.visitClassBody(ctx.classBody());
+    if(ctx.EXTENDS()===undefined&&ctx.IMPLEMENTS()===undefined){
+      return {
+        type:"ClassDeclaration",
+        name: ctx.ID(0).text,
+        body
+      }
+    }
+    if(ctx.EXTENDS()===undefined&&ctx.IMPLEMENTS()!==undefined){
+      let implementations : string[] =[]
+      ctx.ID().forEach((value: any, index) => {
+        if(index!==0)
+          implementations.push(value.text);
+      })
+      return {
+        type:"ClassDeclaration",
+        name: ctx.ID(0).text,
+        implement: implementations,
+        body
+      }
+    }
+    if(ctx.EXTENDS()!==undefined&&ctx.IMPLEMENTS()===undefined){
+      return {
+        type:"ClassDeclaration",
+        name: ctx.ID(0).text,
+        parent: ctx.ID(1).text,
+        body
+      }
+    }
+    let implementations : string[] =[]
+    ctx.ID().forEach((value: any, index) => {
+      if(index!==0&&index!==1){
+        implementations.push(value.text);
+      }
+    })
+    return {
+      type:"ClassDeclaration",
+      name: ctx.ID(0).text,
+      parent: ctx.ID(1).text,
+      implement: implementations,
+      body
+    }
+  }
+
+  visitObjectCreationExpr(ctx: ObjectCreationExprContext): ObjectCreationExpression{
+    const className = ctx.ID().text;
+    const args = ctx.expr().map((arg: any) => this.visit(arg));
+    return {
+      type:"ObjectCreationExpression",
+      className,
+      args
+    }
   }
 
   visitExpr(ctx: any): ASTNode {

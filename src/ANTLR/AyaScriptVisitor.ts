@@ -31,6 +31,7 @@ import { StringContext } from "./AyaScriptParser";
 import { IncrementContext } from "./AyaScriptParser";
 import { DecrementContext } from "./AyaScriptParser";
 import { ArrayListContext } from "./AyaScriptParser";
+import { NewObjectExprContext } from "./AyaScriptParser";
 import { TypeInferenceVarDeclContext } from "./AyaScriptParser";
 import { ExplicitVarDeclContext } from "./AyaScriptParser";
 import { ProgramContext } from "./AyaScriptParser";
@@ -49,13 +50,13 @@ import { ParamListContext } from "./AyaScriptParser";
 import { ParamContext } from "./AyaScriptParser";
 import { ExprContext } from "./AyaScriptParser";
 import { BlockContext } from "./AyaScriptParser";
-import { StructOrUnionSpecifierContext } from "./AyaScriptParser";
 import { ArrListContext } from "./AyaScriptParser";
-import { StructOrUnionContext } from "./AyaScriptParser";
-import { StructDeclarationListContext } from "./AyaScriptParser";
-import { StructItemContext } from "./AyaScriptParser";
 import { LvalueContext } from "./AyaScriptParser";
 import { TypeContext } from "./AyaScriptParser";
+import { MethodDeclContext } from "./AyaScriptParser";
+import { ClassDeclarationContext } from "./AyaScriptParser";
+import { ClassBodyContext } from "./AyaScriptParser";
+import { ObjectCreationExprContext } from "./AyaScriptParser";
 
 
 /**
@@ -291,6 +292,14 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitArrayList?: (ctx: ArrayListContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by the `NewObjectExpr`
+	 * labeled alternative in `AyaScriptParser.expr`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitNewObjectExpr?: (ctx: NewObjectExprContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by the `TypeInferenceVarDecl`
 	 * labeled alternative in `AyaScriptParser.varDecl`.
 	 * @param ctx the parse tree
@@ -419,39 +428,11 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitBlock?: (ctx: BlockContext) => Result;
 
 	/**
-	 * Visit a parse tree produced by `AyaScriptParser.structOrUnionSpecifier`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitStructOrUnionSpecifier?: (ctx: StructOrUnionSpecifierContext) => Result;
-
-	/**
 	 * Visit a parse tree produced by `AyaScriptParser.arrList`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	visitArrList?: (ctx: ArrListContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `AyaScriptParser.structOrUnion`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitStructOrUnion?: (ctx: StructOrUnionContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `AyaScriptParser.structDeclarationList`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitStructDeclarationList?: (ctx: StructDeclarationListContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `AyaScriptParser.structItem`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitStructItem?: (ctx: StructItemContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `AyaScriptParser.lvalue`.
@@ -466,5 +447,33 @@ export interface AyaScriptVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitType?: (ctx: TypeContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.methodDecl`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitMethodDecl?: (ctx: MethodDeclContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.classDeclaration`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitClassDeclaration?: (ctx: ClassDeclarationContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.classBody`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitClassBody?: (ctx: ClassBodyContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `AyaScriptParser.objectCreationExpr`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitObjectCreationExpr?: (ctx: ObjectCreationExprContext) => Result;
 }
 
