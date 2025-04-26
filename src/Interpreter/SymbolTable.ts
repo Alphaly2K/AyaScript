@@ -1,4 +1,6 @@
 ﻿import { FunctionDeclaration } from "../AST/FunctionDeclaration";
+import {MethodDeclaration} from "../AST/MethodDeclaration";
+import {ClassDeclaration} from "../AST/ClassDeclaration";
 
 export type SymbolTable = FunctionSymbolTable | VariableSymbolTable;
 export type VariableSymbolTableEntry = {
@@ -90,5 +92,37 @@ export class FunctionSymbolTable {
       return <FunctionDeclaration>this.table.get(name);
     }
     throw new Error(`No function declaration: ${name}`);
+  }
+}
+
+export type PropertySymbolTableEntry = {
+  name: string; // 变量名
+  type: string; // 数据类型
+  isArray: boolean; // 是否是数组
+  isFinal: boolean;
+  isPublic: boolean;
+  isStatic: boolean;
+  dimensions?: number[]; // 数组的维度，仅数组需要
+  memoryAddress?: number; // 内存地址，仅数组和结构体需要
+  value?: any; // 标量变量的直接值
+};
+
+export type ClassSymbolTableEntry = ClassDeclaration;
+export class ClassSymbolTable {
+  private table: Map<string, ClassSymbolTableEntry>;
+
+  constructor() {
+    this.table = new Map();
+  }
+
+  addEntry(entry: ClassSymbolTableEntry) {
+    if (this.table.has(entry.name)) {
+      throw new Error(`Class ${entry.name} already defined.`);
+    }
+    this.table.set(entry.name, entry);
+  }
+
+  lookup(name: string): ClassSymbolTableEntry | undefined {
+    return this.table.get(name);
   }
 }

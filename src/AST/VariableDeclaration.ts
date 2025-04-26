@@ -6,4 +6,7 @@ export interface VariableDeclaration {
   name: string;
   value: ASTNode | null;
   varType: Type | null;
+  isPublic: boolean;
+  isStatic: boolean;
+  isFinal: boolean;
 }

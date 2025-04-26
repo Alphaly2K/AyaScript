@@ -4,5 +4,5 @@ export interface Type {
   type: "Type";
   name: string;
   isArray: boolean;
-  arraySize: ASTNode | null;
+  arraySize?: ASTNode;
 }

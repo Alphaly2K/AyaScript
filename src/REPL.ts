@@ -12,7 +12,6 @@ export function REPL(input: string) {
   const parseTree = parser.program();
   const astBuilder = new ASTBuilder();
   const ast = astBuilder.visitProgram(parseTree);
-
   const interpreter = new Interpreter();
   interpreter.execute(ast);
 }

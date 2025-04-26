@@ -21,5 +21,13 @@ send(b[3]+b[1]);
 send(d[0]);
 send(add(1,2));
 send(a);
+class ABC {
+var a = 2;
+func add(): int
+{
+     send(a);
+     return a+1;
+}
+}
 `;
 REPL(code)

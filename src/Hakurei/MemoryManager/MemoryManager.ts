@@ -18,7 +18,7 @@ export class MemoryManager {
 
     freeString(str: VMString) {
         if (str.refCount <= 0) {
-            this.heap.delete(str.id);
+//            this.heap.delete(str.id);
         }
     }
 

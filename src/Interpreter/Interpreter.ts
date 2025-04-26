@@ -1,5 +1,6 @@
 ﻿import { RuntimeMemory } from "./Memory";
 import {
+  ClassSymbolTable,
   FunctionSymbolTable,
   FunctionSymbolTableEntry,
   SymbolTable,
@@ -20,6 +21,7 @@ let exStdLib : FuncProcessor = new FuncProcessor();
 export class Interpreter {
   private functionScope: FunctionSymbolTable = new FunctionSymbolTable();
   private variableScope: VariableSymbolTable = new VariableSymbolTable();
+  private classScope: ClassSymbolTable = new ClassSymbolTable();
   private loopStack: Array<"LOOP" | "BREAK" | "CONTINUE"> = [];
   private returnValue: any = null;
 
@@ -79,6 +81,10 @@ export class Interpreter {
       case "ReturnStatement":
         this.returnValue = this.evaluate(node.value);
         throw "RETURN";
+
+      case "ClassDeclaration":
+        this.classScope.addEntry(node);
+        break;
 
       case "FunctionCall":
         return this.callFunction(node);
@@ -171,12 +177,16 @@ export class Interpreter {
                 memoryAddress: address,
               });
             } else {
-              this.variableScope.addEntry({
-                type: (typeof this.evaluate(<ASTNode>node.value)).toString(),
-                name: node.name,
-                isArray: false,
-                value: this.evaluate(<ASTNode>node.value),
-              });
+              if (node.value.type === "ObjectCreationExpression") {
+                node.value.className
+              } else {
+                this.variableScope.addEntry({
+                  type: (typeof this.evaluate(<ASTNode>node.value)).toString(),
+                  name: node.name,
+                  isArray: false,
+                  value: this.evaluate(<ASTNode>node.value),
+                });
+              }
             }
           } else {
             throw new Error("Unrecognized type, no type inference available.");
@@ -229,7 +239,7 @@ export class Interpreter {
             }
           }
         }
-        break;
+        break; //只实现了简单数组
 
       case "Literal":
         return node.value;
@@ -346,7 +356,7 @@ export class Interpreter {
         );
       }
     }
-    if (this.returnValue === null && func.returnType != "void") {
+    if (this.returnValue === null && func.returnType.name !== "void") {
       throw new Error("Function '" + func.returnType + "' not found.");
     }
     const returnValue = this.returnValue;
